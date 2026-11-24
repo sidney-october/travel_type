@@ -3,13 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>여행 취향 테스트</title>
-<meta property="og:type" content="website">
-<meta property="og:title" content="[MetLife] 여행 취향 테스트! 나는 어떤 동물일까?">
-<meta property="og:description" content="12개 질문으로 알아보는 나의 여행 성향">
-<meta property="og:image" content="https://sidney-october.github.io/travel-test/og_thumbnail.jpg">
-<meta property="og:url" content="https://sidney-october.github.io/travel-test/">
-<meta name="twitter:card" content="summary_large_image">
+<title>여행 취향 테스트_v2_개인정보 비적재</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
@@ -66,6 +60,18 @@
   /* ---------- layout ---------- */
   .wrap{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:calc(clamp(160px, 22vh, 220px) + 16px) 18px 44px;}
   .brandbar{display:flex; align-items:center; justify-content:center; margin-bottom:18px;}
+  .langswitch{
+    position:fixed; top:calc(env(safe-area-inset-top,0px) + 12px); right:14px; z-index:5;
+    display:flex; gap:3px; background:var(--brand-dark-blue); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    border-radius:999px; padding:4px; box-shadow:0 8px 20px -8px rgba(11,43,69,.6), 0 0 0 1.5px rgba(255,255,255,.35) inset;
+  }
+  .langswitch .langbtn{display:inline-flex; align-items:center; gap:5px; border:none; background:transparent; color:rgba(255,255,255,.85); font-size:11.5px; font-weight:700; padding:6px 11px; border-radius:999px; cursor:pointer; line-height:1; white-space:nowrap; font-family:inherit;}
+  .langswitch .langbtn .flag{font-size:13px; line-height:1;}
+  .langswitch .langbtn.active{background:var(--brand-yellow-bg); color:#0F3A26;}
+  @media (max-width:420px){
+    .langswitch{top:calc(env(safe-area-inset-top,0px) + 10px); right:10px;}
+    .langswitch .langbtn{font-size:11px; padding:5px 10px;}
+  }
   .brandbar .brand-logo{height:18px; width:auto; display:block; filter:drop-shadow(0 1px 5px rgba(0,0,0,.22));}
 
   .card{
@@ -113,10 +119,32 @@
   .btn:active{transform:translateY(0);}
   .btn.gold{background:var(--brand-yellow-bg); color:#0F3A26; box-shadow:0 12px 26px -12px rgba(85,184,118,.55);}
   .btn.ghost{background:transparent; color:#1C7A4B; box-shadow:none; border:1.5px solid rgba(85,184,118,.4);}
+  .btn.share{background:var(--brand-blue); color:#fff; box-shadow:0 12px 26px -12px rgba(63,168,220,.6);}
   .btn.small{padding:12px 16px; font-size:13px;}
   .btn[disabled]{opacity:.45; cursor:not-allowed; transform:none;}
   .btnrow{display:flex; gap:10px; margin-top:6px;}
   .btnrow .btn{flex:1;}
+
+  /* ---------- share sheet ---------- */
+  .sharesheet-backdrop{position:fixed; inset:0; background:rgba(11,43,69,.45); z-index:20; animation:fadein .15s ease;}
+  .sharesheet{position:fixed; left:0; right:0; bottom:0; z-index:21; background:var(--paper); border-radius:22px 22px 0 0; padding:10px 20px calc(env(safe-area-inset-bottom,0px) + 20px); box-shadow:0 -12px 32px -8px rgba(11,43,69,.35); max-width:460px; margin:0 auto; animation:sheetup .22s cubic-bezier(.2,.9,.3,1);}
+  .sharesheet-handle{width:38px; height:4px; border-radius:999px; background:var(--line); margin:6px auto 14px;}
+  .sharesheet-title{font-size:14px; font-weight:700; color:var(--ink-soft); text-align:center; margin:0 0 14px;}
+  .sharesheet-opt{display:flex; align-items:center; gap:14px; width:100%; border:none; background:transparent; padding:13px 6px; font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; border-radius:12px; text-align:left; font-family:inherit;}
+  .sharesheet-opt:active{background:var(--paper-soft);}
+  .sharesheet-ico{display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; font-size:18px; background:var(--paper-soft); flex-shrink:0;}
+  .sharesheet-ico.kakao{background:#FEE500;}
+  .sharesheet-ico.messenger{background:#00B2FF; color:#fff;}
+  .sharesheet-ico.sms{background:color-mix(in srgb, var(--brand-blue) 20%, var(--paper-soft));}
+  .sharesheet-ico.copy{background:color-mix(in srgb, var(--brand-green) 22%, var(--paper-soft));}
+  .sharesheet-cancel{display:block; width:100%; margin-top:8px; padding:13px; border:none; border-radius:12px; background:var(--paper-soft); color:var(--ink-soft); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit;}
+  .sharesheet-toast{text-align:center; font-size:12.5px; font-weight:700; color:var(--brand-dark-blue); margin:10px 0 0; min-height:1px; opacity:0; transition:opacity .2s ease;}
+  .sharesheet-toast.show{opacity:1;}
+  @keyframes sheetup{from{transform:translateY(100%);} to{transform:translateY(0);}}
+  @keyframes fadein{from{opacity:0;} to{opacity:1;}}
+
+  /* ---------- shared-result (friend's link) screen ---------- */
+  .shared-banner{display:flex; align-items:center; gap:8px; justify-content:center; font-size:12.5px; font-weight:700; color:var(--brand-dark-blue); background:var(--paper-soft); border-radius:999px; padding:8px 14px; margin-bottom:16px; text-align:center;}
 
   /* ---------- form ---------- */
   .field{margin-bottom:16px;}
@@ -174,23 +202,29 @@
     display:inline-block; font-size:12px; font-weight:800; letter-spacing:.18em;
     color:var(--type-color, var(--brand-dark-blue)); margin-bottom:6px;
   }
-  .resulthead h2{font-size:24px; font-weight:900; margin-bottom:8px;}
-  .resulthead .tagline{font-size:14.5px; color:var(--ink-soft); line-height:1.6;}
+  .resulthead h2{font-size:25px; font-weight:900; margin-bottom:9px;}
+  .resulthead .tagline{font-size:16.5px; font-weight:600; color:var(--ink); line-height:1.55;}
 
   .section{margin-top:22px;}
-  .section h3{font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px;}
+  .section h3{font-size:13.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px;}
   .trait-block{border-radius:16px; padding:16px 16px 14px; margin-top:16px;}
   .trait-block h3{display:flex; align-items:center; gap:6px; color:var(--type-color, var(--ink-faint)); margin-bottom:12px;}
-  .trait-block h3 .ico{font-size:14px;}
+  .trait-block h3 .ico{font-size:15px;}
   .trait-self{background:transparent; border:1.5px solid color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 45%, transparent);}
   .trait-friends{background:transparent; border:1.5px dashed color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 45%, transparent);}
+  /* New "나와 잘 맞는 여행 파트너" block -- same .trait-block box model as the two
+     blocks above (padding/radius/margin-top all inherited), only background+border
+     differ, so it drops in without touching their layout. */
+  .trait-partner{background:var(--type-tint, var(--paper-soft)); border:1.5px solid color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 30%, transparent);}
+  .trait-partner .partner-name{font-size:14.5px; font-weight:700; color:var(--type-color, var(--ink)); margin-bottom:5px; line-height:1.45;}
+  .trait-partner .partner-reason{font-size:14px; line-height:1.6; color:var(--ink-soft); margin:0;}
   .tags{display:flex; flex-wrap:wrap; gap:7px;}
-  .tag{font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:999px; background:color-mix(in srgb, var(--brand-yellow-bg) 22%, var(--paper-soft)); color:#0F3A26; border:1px solid color-mix(in srgb, var(--brand-yellow-bg) 45%, transparent);}
+  .tag{font-size:13.5px; font-weight:700; padding:6px 11px; border-radius:999px; background:color-mix(in srgb, var(--brand-yellow-bg) 22%, var(--paper-soft)); color:#0F3A26; border:1px solid color-mix(in srgb, var(--brand-yellow-bg) 45%, transparent);}
   .list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
-  .list li{font-size:14px; line-height:1.6; padding-left:20px; position:relative; color:var(--ink);}
+  .list li{font-size:14.5px; line-height:1.6; padding-left:20px; position:relative; color:var(--ink);}
   .list li::before{content:"✦"; position:absolute; left:0; top:1px; color:var(--type-color, var(--brand-dark-blue)); font-size:12px;}
   .trips{display:flex; flex-wrap:wrap; gap:8px;}
-  .trip{font-size:13px; padding:8px 12px; background:var(--paper-soft); border-radius:12px; border:1px solid var(--line);}
+  .trip{font-size:13.5px; padding:8px 12px; background:var(--paper-soft); border-radius:12px; border:1px solid var(--line);}
 
   .barrow{display:flex; align-items:center; gap:10px; margin-bottom:9px;}
   .barrow .blabel{width:70px; font-size:12px; font-weight:700; color:var(--ink-soft); flex-shrink:0;}
@@ -210,6 +244,11 @@
 <body>
   <div class="scene" aria-hidden="true"></div>
 
+  <div class="langswitch" id="langSwitch" role="group" aria-label="language">
+    <button type="button" class="langbtn active" data-lang="ko"><span class="flag" aria-hidden="true">🇰🇷</span>한국어</button>
+    <button type="button" class="langbtn" data-lang="bn"><span class="flag" aria-hidden="true">🇧🇩</span>বাংলা</button>
+  </div>
+
   <main class="wrap">
     <div class="brandbar"><img class="brand-logo" src="data:image/png;base64,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" alt="MetLife"></div>
     <div id="app" class="card" role="main"></div>
@@ -217,6 +256,7 @@
   </main>
 
   <iframe name="hiddenSubmitFrame" id="hiddenSubmitFrame" style="display:none;" title="submit" aria-hidden="true"></iframe>
+  <div id="shareSheetRoot"></div>
 
 <script>
 (function(){
@@ -241,6 +281,7 @@
     "1275423381","355888913","1960145189","1316898094","1308304871","1782121414"
   ];
   var ENTRY = {
+    language: "277334229",
     scoreD:   "244647918",
     scoreA:   "2006094093",
     scoreI:   "1138713557",
@@ -249,115 +290,321 @@
   };
 
   /* ============ static content data ============ */
-  var QUESTIONS = [
-    {q:"어디를 갈까?! 여행을 위해 가장 먼저 하는 행동은?", scored:true, options:[
-      {t:"마음에 확 끌리는 곳으로 바로 정한다", p:{D:7,A:0,I:0}},
-      {t:"가고싶은 여행지의 항공권, 숙소, 날씨, 동선 등을 비교하여 최적의 여행지를 찾는다", p:{D:0,A:7,I:0}},
-      {t:"누구랑 갈까? 같이 갈 사람과 함께 상의해야겠다!", p:{D:0,A:0,I:7}}
+  var QUESTIONS_KO = [
+    {q:"여행지를 정해야 할 때 나는?", scored:true, options:[
+      {t:"주도적으로 결정하고 추진한다", p:{D:7,A:0,I:0}},
+      {t:"충분한 정보를 비교한 뒤 결정한다", p:{D:0,A:7,I:0}},
+      {t:"함께 가는 사람들의 의견을 먼저 듣는다", p:{D:0,A:0,I:7}}
     ]},
-    {q:"제일 가고싶은 여행지는?", scored:true, options:[
-      {t:"편한 사람과 갈 수 있다면 어디든 오케이 ~", p:{D:0,A:0,I:7}},
-      {t:"정보가 충분하고, 후기가 많은 검증된 여행지", p:{D:0,A:7,I:0}},
-      {t:"익숙하지 않아도 새로운 경험을 할 수 있는 여행지", p:{D:7,A:0,I:0}}
+    {q:"일행들이 서로 다른 관광지를 가고 싶어한다", scored:true, options:[
+      {t:"다른 사람이 원하는 쪽에 맞추는 편이다", p:{D:0,A:0,I:7}},
+      {t:"각 선택지의 장단점을 비교해 설명한다", p:{D:0,A:7,I:0}},
+      {t:"내 의견을 적극적으로 설명하고 결정이 나도록 이끈다", p:{D:7,A:0,I:0}}
     ]},
-    {q:"여행 계획을 세울 때 나는 어떤 성향?", scored:true, options:[
-      {t:"항공권, 숙소는 기본!! 일자별, 시간별로 동선 플랜을 짠다. 이게 계획이지!", p:{D:0,A:7,I:0}},
-      {t:"핵심(항공권·숙소)만 예약하고, 나머지는 그때그때 유연하게 즐긴다", p:{D:6,A:1,I:0}},
-      {t:"친구에게 물어보자! 친구의 의견을 반영해서 계획을 세워본다", p:{D:0,A:1,I:6}}
+    {q:"여행 계획을 세울때 나는?", scored:true, options:[
+      {t:"일자별, 시간별로 세부 일정을 짠다", p:{D:0,A:7,I:0}},
+      {t:"핵심만 정하고 나머지는 상황에 맞춰 움직인다", p:{D:6,A:1,I:0}},
+      {t:"함께할 사람들과 이야기하여 일정을 정한다", p:{D:0,A:1,I:6}}
     ]},
-    {q:"여행을 계획하면서 가장 즐거운 포인트는?", scored:true, options:[
-      {t:"하고 싶은 액티비티나 활동, 새로운 경험들을 기대하며 여행을 기다리는 게 좋다", p:{D:7,A:0,I:0}},
-      {t:"이것저것 찾아보며 제일 최적의 계획을 짜는 과정이 재밌다", p:{D:0,A:7,I:0}},
-      {t:"같이 갈 사람이랑 어떻게 재밌게 놀지 이야기하며 기대하는 게 좋다", p:{D:0,A:0,I:7}}
+    {q:"공항에서 일행이 여권을 잃어버렸다", scored:true, options:[
+      {t:"“공항 직원에게 도움 요청해보자!”", p:{D:7,A:0,I:0}},
+      {t:"“마지막으로 어디서 썼지? 동선부터 확인해보자.”", p:{D:0,A:7,I:0}},
+      {t:"“괜찮아, 너무 걱정 마. 같이 찾아보자!”", p:{D:0,A:0,I:7}}
     ]},
-    {q:"처음 가보는 나라라 말도 안 통하고 분위기도 낯설어서, 동행이 위축된 기색이다", scored:true, options:[
-      {t:"미리 조사해둔 정보로 상황을 하나씩 설명해주며 안심시킨다", p:{D:0,A:6,I:1}},
-      {t:"걱정 말라며 자신 있게 앞장서서 이끈다", p:{D:6,A:1,I:0}},
-      {t:"옆에서 계속 말을 걸고 분위기를 주도하며 마음을 편하게 해준다", p:{D:1,A:0,I:6}}
+    {q:"낯선 나라에서 동행이 위축돼 있다.", scored:true, options:[
+      {t:"조사해둔 정보를 설명하며 안심시킨다", p:{D:0,A:6,I:1}},
+      {t:"걱정하지 말라며 자신 있게 앞장선다", p:{D:6,A:1,I:0}},
+      {t:"계속 말을 걸며 편안하게 해준다", p:{D:1,A:0,I:6}}
     ]},
-    {q:"여행지에서 예상보다 재밌는 활동을 우연히 발견했다", scored:true, options:[
-      {t:"일단 해보면서 필요한 건 그때그때 확인한다", p:{D:7,A:0,I:0}},
-      {t:"궁금하니까 후기부터 빠르게 훑어보고, 괜찮으면 해본다", p:{D:1,A:6,I:0}},
-      {t:"같이 온 사람도 좋아할지 먼저 마음을 살피고 함께 결정한다", p:{D:0,A:0,I:7}}
+    {q:"여행 중 예상보다 재밌어 보이는 활동을 발견했다", scored:true, options:[
+      {t:"괜찮아보이면 일단 해보고 필요한 건 그때 확인한다", p:{D:7,A:0,I:0}},
+      {t:"후기를 확인한 뒤 비교분석 한다", p:{D:1,A:6,I:0}},
+      {t:"동행의 반응을 보고 함께 할지 정한다", p:{D:0,A:0,I:7}}
     ]},
-    {q:"액티비티 중, 내가 우리 팀의 팀장이 되었다. 1등한 팀에게 마사지샵 이용권을 준다고 한다", scored:true, options:[
-      {t:"이길 수 있는 전략을 짜서 팀원들에게 설명해준다", p:{D:1,A:6,I:0}},
-      {t:"팀원들을 격려하면서 다같이 즐겁게 해낼 수 있도록 이끈다", p:{D:1,A:0,I:6}},
-      {t:"자신 있게 앞장서서 팀을 이끌고 바로 움직인다", p:{D:6,A:0,I:1}}
+    {q:"액티비티 중 내가 우리팀의 팀장이 됐다.", scored:true, options:[
+      {t:"이길 수 있는 전략부터 고민한다", p:{D:1,A:6,I:0}},
+      {t:"1등보다도, 다같이 즐거울 수 있도록 한다", p:{D:1,A:0,I:6}},
+      {t:"“이왕 하는 거 1등 해야지!” 팀을 이끌고 바로 움직인다", p:{D:6,A:0,I:1}}
     ]},
-    {q:"친구의 실수로 숙소 예약 날짜가 하루 밀려있다. 상대방한테 제일 먼저 할 말은?", scored:true, options:[
-      {t:"“예약을 잘못했네? 다른 호텔이나 예약 가능한 방 있는지 찾아보자”", p:{D:5,A:1,I:1}},
-      {t:"“우선 예약 내역부터 체크해보자. 어디서 문제가 생긴 건지 확인 하자”", p:{D:0,A:7,I:0}},
-      {t:"“괜찮아! 너무 걱정하지 마. 우리 같이 해결해보자”", p:{D:1,A:0,I:6}}
+    {q:"숙소 예약 날짜가 하루 밀렸다. 가장 먼저 할 말은?", scored:true, options:[
+      {t:"“다른 호텔이나 가능한 방부터 빨리 찾아보자.”", p:{D:5,A:1,I:1}},
+      {t:"“예약 내역부터 확인해서 어디서 문제가 생겼는지 보자.”", p:{D:0,A:7,I:0}},
+      {t:"“괜찮아. 일단 진정하고 같이 생각해보자.”", p:{D:1,A:0,I:6}}
     ]},
-    {q:"여행 중 가장 싫을 것 같은 상황은?", scored:true, options:[
-      {t:"함께하는 일행과 여행 분위기가 기대만큼 좋지 않은 상황", p:{D:0,A:0,I:7}},
-      {t:"내가 계획한 일정이 제대로 흘러가지 않는 상황", p:{D:0,A:7,I:0}},
-      {t:"날씨가 안좋아서 목표했던 투어일정을 진행하지 못했을 때", p:{D:7,A:0,I:0}}
+    {q:"평소의 나라면 가장 일어나지 않을 것 같은 상황은?", scored:true, options:[
+      {t:"내 의견만 고집해 일행이 눈치를 보는 상황", p:{D:0,A:0,I:7}},
+      {t:"계획 없이 움직이다 일정이 계속 꼬이는 상황", p:{D:0,A:7,I:0}},
+      {t:"결정을 미루다 아무것도 제대로 추진하지 못하는 상황", p:{D:7,A:0,I:0}}
     ]},
-    {q:"친구가 바라본 나는? 어떤 사람일까?", scored:true, options:[
+    {q:"친구가 보는 나는 어떤 사람일까?", scored:true, options:[
       {t:"적극적이고 추진력 있다", p:{D:7,A:0,I:0}},
-      {t:"분위기에 잘 맞춰준다", p:{D:0,A:0,I:7}},
+      {t:"상대방의 의견을 먼저 배려한다", p:{D:0,A:0,I:7}},
       {t:"꼼꼼하고 계획적이다", p:{D:0,A:7,I:0}}
     ]},
-    {q:"여행 후 가장 뿌듯한 순간은?", scored:true, options:[
-      {t:"“이건 진짜 아무나 못 해보는 거였다!” 싶은 새로운 도전을 해냈을 때", p:{D:7,A:0,I:0}},
-      {t:"계획한 대로 다 챙겨서 동행도 편하게 여행할 수 있었을 때", p:{D:0,A:6,I:1}},
-      {t:"서로 함께 의지하며 여행을 잘 끝마쳤을 때", p:{D:0,A:0,I:7}}
+    {q:"가장 기대했던 관광지가 문을 닫았다.", scored:true, options:[
+      {t:"내가 가고싶은 관광지를 찾아서 제안한다", p:{D:5,A:1,I:1}},
+      {t:"그전에 알아본 정보를 기반으로 일정을 고민한다", p:{D:1,A:5,I:1}},
+      {t:"다들 아쉽겠다, 가고싶은 다른 곳 없어? 친구에게 물어본다", p:{D:1,A:0,I:6}}
     ]},
-    {q:"세 친구 중 한 명과만 여행이 가능한 상황이다. 어떤 사람과 여행하고 싶은가?", scored:false, options:[
+    {q:"한 명과만 여행할 수 있다면 누구와 가고 싶은가?", scored:false, options:[
       {t:"추진력이 있어 새로운 경험을 함께할 수 있는 사람", p:{D:0,A:0,I:0}},
       {t:"동선, 예약, 일정 다 챙겨 든든한 사람", p:{D:0,A:0,I:0}},
       {t:"내 이야기를 잘 들어주고 여행하는 데 편안한 사람", p:{D:0,A:0,I:0}}
     ]}
   ];
+  // Bengali ("벵골어") translation of QUESTIONS_KO -- same 12 questions, same order,
+  // same scored flags, and byte-identical D/A/I point values per option (sourced from
+  // "진단지 수정 최종_벵골어 ver." sheet, cross-checked option-by-option against the
+  // Korean sheet's point columns). Only the displayed text differs, so switching
+  // language never changes scoring and is safe even mid-quiz.
+  var QUESTIONS_BN = [
+    {q:"ভ্রমণের গন্তব্য ঠিক করার সময় আমি কী করি?", scored:true, options:[
+      {t:"আমি দ্রুত সিদ্ধান্ত নিয়ে তা বাস্তবায়নে এগিয়ে যাই।", p:{D:7,A:0,I:0}},
+      {t:"পর্যাপ্ত তথ্য তুলনা করার পর সিদ্ধান্ত নিই।", p:{D:0,A:7,I:0}},
+      {t:"সঙ্গে যারা যাবে, প্রথমে তাদের মতামত শুনি।", p:{D:0,A:0,I:7}}
+    ]},
+    {q:"ভ্রমণসঙ্গীরা ভিন্ন ভিন্ন দর্শনীয় স্থানে যেতে চায়। আমি কী করি?", scored:true, options:[
+      {t:"অন্যরা কোন জায়গায় যেতে চায়, সেটা শুনে তাদের পছন্দের সঙ্গে মিলিয়ে নিই।", p:{D:0,A:0,I:7}},
+      {t:"প্রতিটি জায়গার সুবিধা ও অসুবিধা তুলনা করে ব্যাখ্যা করি।", p:{D:0,A:7,I:0}},
+      {t:"নিজের মতামত স্পষ্টভাবে জানাই এবং সবাইকে একটি সিদ্ধান্তে পৌঁছাতে নেতৃত্ব দিই।", p:{D:7,A:0,I:0}}
+    ]},
+    {q:"ভ্রমণের পরিকল্পনা করার সময় আমি কী করি?", scored:true, options:[
+      {t:"দিন ও সময় অনুযায়ী বিস্তারিত ভ্রমণসূচি তৈরি করি।", p:{D:0,A:7,I:0}},
+      {t:"মূল বিষয়গুলো ঠিক করে রাখি, বাকিটা পরিস্থিতি অনুযায়ী ঠিক করি।", p:{D:6,A:1,I:0}},
+      {t:"ভ্রমণসঙ্গীদের সঙ্গে কথা বলে একসঙ্গে পরিকল্পনা ঠিক করি।", p:{D:0,A:1,I:6}}
+    ]},
+    {q:"বিমানবন্দরে একজন ভ্রমণসঙ্গী তার পাসপোর্ট হারিয়ে ফেলেছে। আমি প্রথমে কী বলব?", scored:true, options:[
+      {t:"“চলো, এখনই বিমানবন্দরের কর্মীদের কাছে সাহায্য চাই!”", p:{D:7,A:0,I:0}},
+      {t:"“শেষবার কোথায় ব্যবহার করেছিলে? আগে কোথায় কোথায় গিয়েছিলে, সেটা দেখি।”", p:{D:0,A:7,I:0}},
+      {t:"“ঠিক আছে, বেশি চিন্তা করো না। চলো, আমরা একসঙ্গে খুঁজি!”", p:{D:0,A:0,I:7}}
+    ]},
+    {q:"অপরিচিত একটি দেশে এসে আমার ভ্রমণসঙ্গী কিছুটা অস্বস্তিতে আছে। আমি কী করি?", scored:true, options:[
+      {t:"আগে থেকে জেনে রাখা তথ্যগুলো বুঝিয়ে তাকে আশ্বস্ত করি।", p:{D:0,A:6,I:1}},
+      {t:"“চিন্তা কোরো না!” বলে আত্মবিশ্বাসের সঙ্গে সামনে থেকে নেতৃত্ব দিই।", p:{D:6,A:1,I:0}},
+      {t:"তার সঙ্গে কথা বলতে থাকি, যেন সে স্বাচ্ছন্দ্য বোধ করে।", p:{D:1,A:0,I:6}}
+    ]},
+    {q:"ভ্রমণের সময় হঠাৎ এমন একটি মজার কার্যকলাপ দেখতে পেলাম, যা পরিকল্পনায় ছিল না। আমি কী করি?", scored:true, options:[
+      {t:"আগে চেষ্টা করে দেখি, প্রয়োজনীয় তথ্য পরে দেখে নিই।", p:{D:7,A:0,I:0}},
+      {t:"আগে দ্রুত রিভিউগুলো দেখে নিই, তারপর সিদ্ধান্ত নিই।", p:{D:1,A:6,I:0}},
+      {t:"ভ্রমণসঙ্গীর আগ্রহ আছে কি না দেখে তারপর একসঙ্গে সিদ্ধান্ত নিই।", p:{D:0,A:0,I:7}}
+    ]},
+    {q:"একটি কার্যকলাপে আমি আমাদের দলের দলনেতা হয়েছি। আমি কী করি?", scored:true, options:[
+      {t:"কীভাবে জেতা যায়, সেই কৌশলটা আগে ভাবি।", p:{D:1,A:6,I:0}},
+      {t:"প্রথম হওয়ার চেয়ে সবাই যেন একসঙ্গে উপভোগ করতে পারে, সেটাকে বেশি গুরুত্ব দিই।", p:{D:1,A:0,I:6}},
+      {t:"“যেহেতু করছিই, জিতেই যাই!” দলকে নেতৃত্ব দিয়ে সঙ্গে সঙ্গে এগিয়ে যাই।", p:{D:6,A:0,I:1}}
+    ]},
+    {q:"বন্ধুর ভুলে হোটেল বুকিংয়ের তারিখ এক দিন পিছিয়ে গেছে। আমি প্রথমে কী বলব?", scored:true, options:[
+      {t:"“আগে অন্য কোনো হোটেল বা খালি রুম খুঁজে দেখি।”", p:{D:5,A:1,I:1}},
+      {t:"“আগে বুকিংয়ের তথ্যটা দেখি। কোথায় সমস্যা হয়েছে, সেটা খুঁজে বের করি।”", p:{D:0,A:7,I:0}},
+      {t:"“অনেকটা ঘাবড়ে গেছ, তাই না? আগে শান্ত হও, তারপর একসঙ্গে ভাবি।”", p:{D:1,A:0,I:6}}
+    ]},
+    {q:"ভ্রমণের সময় নিচের কোন পরিস্থিতিটি দেখে আমার মনে হবে, “এটা একদম আমার মতো নয়”?", scored:true, options:[
+      {t:"আমি শুধু নিজের মতামতই জোর করে দিচ্ছি, আর আমার কারণে ভ্রমণসঙ্গীরা অস্বস্তি বোধ করছে।", p:{D:0,A:0,I:7}},
+      {t:"কোনো পরিকল্পনা ছাড়াই চলতে গিয়ে সময়সূচি বারবার এলোমেলো হয়ে যাচ্ছে।", p:{D:0,A:7,I:0}},
+      {t:"সিদ্ধান্ত নিতে দেরি করতে করতে কিছুই ঠিকভাবে এগিয়ে নিতে পারছি না।", p:{D:7,A:0,I:0}}
+    ]},
+    {q:"আমার বন্ধুরা আমাকে কী ধরনের মানুষ বলে মনে করে?", scored:true, options:[
+      {t:"সক্রিয় এবং কাজ এগিয়ে নিতে পছন্দ করি।", p:{D:7,A:0,I:0}},
+      {t:"অন্যরা কী চায়, সেটা বুঝে স্বাভাবিকভাবে তাদের সঙ্গে মানিয়ে চলি।", p:{D:0,A:0,I:7}},
+      {t:"খুঁটিনাটি বিষয়ে যত্নশীল এবং পরিকল্পনাবদ্ধ।", p:{D:0,A:7,I:0}}
+    ]},
+    {q:"যে দর্শনীয় স্থানটির জন্য সবচেয়ে বেশি অপেক্ষা করছিলাম, সেখানে গিয়ে দেখি সেটি বন্ধ। আমি কী করি?", scored:true, options:[
+      {t:"আমি যেতে চাই এমন অন্য একটি জায়গা বেছে নিয়ে সবার কাছে প্রস্তাব করি।", p:{D:5,A:1,I:1}},
+      {t:"আগে থেকে জেনে রাখা তথ্যের ভিত্তিতে পরের পরিকল্পনা ঠিক করি।", p:{D:1,A:5,I:1}},
+      {t:"“সবাই কোথায় যেতে চাও?” ভ্রমণসঙ্গীদের মতামত শুনে তাদের পছন্দের সঙ্গে মিলিয়ে নিই।", p:{D:1,A:0,I:6}}
+    ]},
+    {q:"যদি শুধু একজনের সঙ্গে ভ্রমণে যেতে পারি, কাকে বেছে নেব?", scored:false, options:[
+      {t:"এমন একজন, যে উদ্যোগী এবং আমার সঙ্গে নতুন অভিজ্ঞতা উপভোগ করতে পারে।", p:{D:0,A:0,I:0}},
+      {t:"এমন একজন নির্ভরযোগ্য মানুষ, যে পথ, বুকিং এবং সময়সূচি ভালোভাবে সামলায়।", p:{D:0,A:0,I:0}},
+      {t:"এমন একজন, যে আমার কথা মন দিয়ে শোনে এবং ভ্রমণের সময় আমাকে স্বাচ্ছন্দ্য বোধ করায়।", p:{D:0,A:0,I:0}}
+    ]}
+  ];
   var KEY_Q_INDEX = [0,1,4,9]; // Q1, Q2, Q5, Q10 (0-based) — tie-break questions
   var TOTAL_POINTS = 77; // fixed sum of each trait's points across the whole test
 
-  var TYPES = {
+  var TYPES_KO = {
     D:{code:"D", emoji:"🐆", name:"치타형 여행자", color:"var(--brand-berry)",
       tagline:"새로운 경험을 이끄는 도전형 여행자",
       keywords:["#추진력","#결단력","#도전정신","#자신감","#행동력"],
       traits:["여행지가 정해지면 바로 움직여요","새로운 경험을 즐겨요","망설이기보다 실행이 빨라요","여행의 중심에서 분위기를 이끌어요"],
       friends:["결정이 빠른 사람","추진력이 있는 사람","에너지가 넘치는 사람","든든하게 이끄는 사람"],
+      partner:{label:"일정을 세심하게 챙겨주는 계획형 여행자", reason:"실행력과 꼼꼼함이 만나 여행의 완성도가 높아져요"},
       trips:["🏜 두바이 사막 ATV 투어","🏔 스위스 패러글라이딩","🚗 미국 서부 로드트립","🎢 유니버설 스튜디오"]},
     DA:{code:"DA", emoji:"🦅", name:"독수리형 여행자", color:"var(--brand-purple)",
       tagline:"계획과 실행을 모두 갖춘 전략형 여행자",
       keywords:["#전략적사고","#계획성","#문제해결","#효율성","#목표지향"],
       traits:["큰 그림부터 생각해요","효율적인 동선을 중요하게 생각해요","상황이 생겨도 침착하게 해결해요","계획과 실행의 균형을 추구해요"],
       friends:["믿고 맡길 수 있는 사람","똑똑하게 여행하는 사람","계획을 잘 세우는 사람","여행 총무 같은 사람"],
+      partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"전략형의 계획을 존중하면서 부드럽게 보완해줘요"},
       trips:["🏛 로마 역사 탐방","🚄 스위스 기차 일주 여행","🌉 싱가포르 시티투어","🏯 교토 문화유산 여행"]},
     DI:{code:"DI", emoji:"🐎", name:"말형 여행자", color:"var(--brand-yellow)",
       tagline:"사람과 경험을 함께 즐기는 에너지형 여행자",
       keywords:["#친화력","#리더십","#영향력","#활동성","#도전정신"],
       traits:["함께하는 순간을 중요하게 생각해요","새로운 활동에 적극적으로 참여해요","분위기를 자연스럽게 이끌어요","사람들과 금방 친해져요"],
       friends:["같이 있으면 재미있는 사람","에너지가 좋은 사람","분위기를 띄우는 사람","사람을 잘 이끄는 사람"],
+      partner:{label:"여행의 완성도를 높이는 계획형 여행자", reason:"재미추구 여행에 계획을 추가해서 완성도를 높여줘요"},
       trips:["🎭 브라질 리우 카니발","🎶 해외 뮤직 페스티벌","🎡 독일 옥토버페스트","🎉 현지 축제 체험 여행"]},
     A:{code:"A", emoji:"🦉", name:"올빼미형 여행자", color:"var(--brand-dark-blue)",
       tagline:"꼼꼼하게 준비하는 계획형 여행자",
       keywords:["#분석력","#계획성","#꼼꼼함","#체계성","#안정성"],
       traits:["정보를 충분히 찾아봐요","계획을 세우는 과정이 즐거워요","예상 가능한 여행을 선호해요","준비가 되어 있어야 마음이 편해요"],
       friends:["계획적인 사람","준비성이 좋은 사람","믿음직한 사람","꼼꼼한 사람"],
+      partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"꼼꼼하고 신중한 나에게 정서적인 편안함을 더해줘요"},
       trips:["🏛 루브르 박물관 투어","🍷 프랑스 와이너리 여행","🏯 일본 역사·문화 여행","🍽 미슐랭 맛집 탐방"]},
     AI:{code:"AI", emoji:"🐘", name:"코끼리형 여행자", color:"var(--brand-blue)",
       tagline:"배려와 계획을 모두 갖춘 신뢰형 여행자",
       keywords:["#배려심","#책임감","#신뢰","#공감","#계획성"],
       traits:["모두가 만족하는 여행을 원해요","사람도 일정도 꼼꼼히 챙겨요","안정감 있는 여행을 선호해요","함께하는 사람을 먼저 생각해요"],
       friends:["믿고 의지할 수 있는 사람","함께 있으면 편한 사람","배려심이 많은 사람","책임감 있는 사람"],
+      partner:{label:"여행의 즐거움을 만드는 소통형 여행자", reason:"안정적인 여행에 재미를 더해 만족도를 최상으로 높여줘요"},
       trips:["🚂 스위스 파노라마 열차","🌲 캐나다 국립공원 여행","🏡 북유럽 힐링 여행","🌌 핀란드 오로라 여행"]},
     I:{code:"I", emoji:"🐬", name:"돌고래형 여행자", color:"var(--brand-teal)",
       tagline:"함께하는 순간을 소중히 여기는 공감형 여행자",
       keywords:["#관계중심","#공감능력","#배려심","#분위기메이커","#소통"],
       traits:["누구와 가는지가 중요해요","분위기를 즐기는 편이에요","추억을 오래 기억해요","사람들과 함께할 때 더 즐거워요"],
       friends:["이야기를 잘 들어주는 사람","함께 있으면 편한 사람","따뜻한 사람","여행 가기 좋은 사람"],
+      partner:{label:"새로운 경험을 만들고 연결하는 도전형 여행자", reason:"새로운 경험을 추가해서 더욱 풍성한 추억을 만들수 있어요"},
       trips:["🌇 노을 크루즈","🏮 대만 야시장 투어","🎪 현지 축제 체험","🌸 감성 골목 여행"]},
     C:{code:"C", emoji:"🐉", name:"용형 여행자", color:"var(--brand-green)",
       tagline:"어디서든 내가 주인공인 연예인 같은 여행자",
       keywords:["#적응력","#균형감각","#유연성","#융통성","#다재다능"],
       traits:["상황에 맞게 유연하게 움직여요","계획과 즉흥을 모두 즐겨요","누구와도 잘 어울려요","새로운 환경에도 금방 적응해요"],
       friends:["어디서든 잘 적응하는 사람","함께 있으면 편한 사람","균형감 있는 사람","다재다능한 사람"],
+      partner:{label:"꼼꼼한 계획형 여행자", reason:"꼼꼼한 계획으로 여행의 완성도를 높여줘요"},
       trips:["🎒 동남아 배낭여행","🚐 뉴질랜드 캠핑카 일주","🌍 세계일주 여행","🏖 발리 자유여행"]}
   };
+  // Bengali ("벵골어") translation of TYPES_KO, sourced from "고객결과지_뱅골어 ver."
+  // where the Korean site text matches the spec sheet, and translated fresh where the
+  // site's copy has been customized away from the spec (tagline/traits/friends for a
+  // few types). Same 7 codes/colors/emoji -- only display text differs.
+  var TYPES_BN = {
+    D:{code:"D", emoji:"🐆", name:"চিতা ধরনের ভ্রমণকারী", color:"var(--brand-berry)",
+      tagline:"নতুন অভিজ্ঞতার পথ দেখানো চ্যালেঞ্জপ্রিয় ভ্রমণকারী",
+      keywords:["#চালিকাশক্তি","#সিদ্ধান্তক্ষমতা","#চ্যালেঞ্জের_মানসিকতা","#আত্মবিশ্বাস","#কর্মতৎপরতা"],
+      traits:["গন্তব্য ঠিক হলেই সাথে সাথে বেরিয়ে পড়ি","নতুন অভিজ্ঞতা উপভোগ করি","দ্বিধা না করে দ্রুত কাজে নামি","ভ্রমণের কেন্দ্রে থেকে পরিবেশকে প্রাণবন্ত করি"],
+      friends:["দ্রুত সিদ্ধান্ত নেওয়া মানুষ","উদ্যমী মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","নির্ভরযোগ্যভাবে নেতৃত্ব দেওয়া মানুষ"],
+      partner:{label:"সূচির খুঁটিনাটি যত্ন নেওয়া পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"কর্মতৎপরতা ও খুঁটিনাটি মনোযোগ মিলে ভ্রমণ আরও পরিপূর্ণ হয়"},
+      trips:["🏜 দুবাই মরুভূমিতে ATV ট্যুর","🏔 সুইজারল্যান্ডে প্যারাগ্লাইডিং","🚗 আমেরিকার পশ্চিমাঞ্চলে রোড ট্রিপ","🎢 ইউনিভার্সাল স্টুডিওস"]},
+    DA:{code:"DA", emoji:"🦅", name:"ঈগল ধরনের ভ্রমণকারী", color:"var(--brand-purple)",
+      tagline:"পরিকল্পনা ও বাস্তবায়ন দুটোতেই দক্ষ কৌশলী ভ্রমণকারী",
+      keywords:["#কৌশলগত_চিন্তা","#সুপরিকল্পিত","#সমস্যা_সমাধান","#কার্যকারিতা","#লক্ষ্যমুখী"],
+      traits:["বড় ছবিটা আগে বিবেচনা করি","কার্যকর ভ্রমণপথকে গুরুত্ব দিই","পরিস্থিতি যেমনই হোক, শান্তভাবে সমাধান করি","পরিকল্পনা ও বাস্তবায়নের মধ্যে ভারসাম্য খুঁজি"],
+      friends:["নিশ্চিন্তে দায়িত্ব দেওয়া যায় এমন মানুষ","বুদ্ধিদীপ্তভাবে ভ্রমণ করা মানুষ","সুপরিকল্পনা করতে পারা মানুষ","ভ্রমণ দলের নিবেদিত সংগঠক"],
+      partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"কৌশলী ভ্রমণকারীর পরিকল্পনাকে সম্মান করে কোমলভাবে ঘাটতি পূরণ করে দেয়"},
+      trips:["🏛 রোমের ইতিহাস অন্বেষণ","🚄 ট্রেনে সুইজারল্যান্ড ঘুরে দেখা","🌉 সিঙ্গাপুর সিটি ট্যুর","🏯 কিয়োটোর সাংস্কৃতিক ঐতিহ্য ভ্রমণ"]},
+    DI:{code:"DI", emoji:"🐎", name:"ঘোড়া ধরনের ভ্রমণকারী", color:"var(--brand-yellow)",
+      tagline:"মানুষ ও অভিজ্ঞতা একসাথে উপভোগ করা প্রাণশক্তিতে ভরপুর ভ্রমণকারী",
+      keywords:["#মিশুকতা","#নেতৃত্ব","#প্রভাব_বিস্তার","#সক্রিয়তা","#চ্যালেঞ্জের_মানসিকতা"],
+      traits:["একসাথে কাটানো মুহূর্তকে গুরুত্ব দিই","নতুন কাজে আগ্রহ নিয়ে অংশ নিই","স্বাভাবিকভাবেই পরিবেশ জমিয়ে তুলি","মানুষের সাথে দ্রুত বন্ধুত্ব গড়ে তুলি"],
+      friends:["সাথে থাকলে মজা লাগে এমন মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","পরিবেশ জমিয়ে তোলা মানুষ","মানুষকে ভালোভাবে নেতৃত্ব দেওয়া মানুষ"],
+      partner:{label:"ভ্রমণকে আরও পরিপূর্ণ করা পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"আনন্দ খোঁজার ভ্রমণে পরিকল্পনা যোগ করে পরিপূর্ণতা বাড়িয়ে দেয়"},
+      trips:["🎭 ব্রাজিলের রিও কার্নিভাল","🎶 বিদেশে মিউজিক ফেস্টিভ্যাল","🎡 জার্মানির অক্টোবরফেস্ট","🎉 স্থানীয় উৎসব অভিজ্ঞতা ভ্রমণ"]},
+    A:{code:"A", emoji:"🦉", name:"পেঁচা ধরনের ভ্রমণকারী", color:"var(--brand-dark-blue)",
+      tagline:"খুঁটিনাটিসহ যত্ন করে প্রস্তুতি নেওয়া পরিকল্পনাপ্রিয় ভ্রমণকারী",
+      keywords:["#বিশ্লেষণ_ক্ষমতা","#সুপরিকল্পিত","#খুঁটিনাটিতে_মনোযোগ","#সুশৃঙ্খলতা","#স্থিতিশীলতা"],
+      traits:["যথেষ্ট তথ্য খুঁজে দেখি","পরিকল্পনা করার প্রক্রিয়াটা উপভোগ করি","অনুমানযোগ্য ভ্রমণ পছন্দ করি","প্রস্তুতি থাকলে তবেই মন শান্ত থাকে"],
+      friends:["পরিকল্পিত মানুষ","ভালো প্রস্তুতি নেওয়া মানুষ","বিশ্বস্ত মানুষ","খুঁটিনাটিতে মনোযোগী মানুষ"],
+      partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"খুঁটিনাটিপ্রিয় ও সতর্ক আমার জন্য মানসিক স্বস্তি যোগ করে দেয়"},
+      trips:["🏛 ল্যুভর জাদুঘর ট্যুর","🍷 ফ্রান্সের ওয়াইনারি ভ্রমণ","🏯 জাপানের ইতিহাস ও সংস্কৃতি ভ্রমণ","🍽 মিশেলিন স্বীকৃত রেস্তোরাঁ ভ্রমণ"]},
+    AI:{code:"AI", emoji:"🐘", name:"হাতি ধরনের ভ্রমণকারী", color:"var(--brand-blue)",
+      tagline:"যত্ন ও পরিকল্পনা দুটোতেই পারদর্শী নির্ভরযোগ্য যত্নশীল ভ্রমণকারী",
+      keywords:["#যত্নশীলতা","#দায়িত্ববোধ","#বিশ্বস্ততা","#সহমর্মিতা","#সুপরিকল্পিত"],
+      traits:["সবাই যেন সন্তুষ্ট থাকে, এমন ভ্রমণ চাই","মানুষ ও সূচি দুটোরই খুঁটিনাটি যত্ন নিই","নিশ্চিন্ত ও স্থিতিশীল ভ্রমণ পছন্দ করি","সঙ্গীদের কথা আগে ভাবি"],
+      friends:["ভরসা ও নির্ভর করা যায় এমন মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","অত্যন্ত যত্নশীল মানুষ","দায়িত্বশীল মানুষ"],
+      partner:{label:"ভ্রমণে আনন্দ যোগ করা যোগাযোগপ্রিয় ভ্রমণকারী", reason:"স্থিতিশীল ভ্রমণে আনন্দ যোগ করে সন্তুষ্টিকে সর্বোচ্চ পর্যায়ে তুলে দেয়"},
+      trips:["🚂 সুইজারল্যান্ডের প্যানোরামা ট্রেন","🌲 কানাডার জাতীয় উদ্যান ভ্রমণ","🏡 উত্তর ইউরোপে হিলিং ভ্রমণ","🌌 ফিনল্যান্ডে অরোরা ভ্রমণ"]},
+    I:{code:"I", emoji:"🐬", name:"ডলফিন ধরনের ভ্রমণকারী", color:"var(--brand-teal)",
+      tagline:"একসাথে কাটানো মুহূর্তকে মূল্য দেওয়া সহমর্মী ভ্রমণকারী",
+      keywords:["#সম্পর্ককেন্দ্রিক","#সহমর্মিতা","#যত্নশীলতা","#মুড_মেকার","#যোগাযোগ"],
+      traits:["কার সাথে যাচ্ছি সেটাই গুরুত্বপূর্ণ","পরিবেশ ও আবহ উপভোগ করতে ভালোবাসি","স্মৃতিগুলো অনেকদিন মনে রাখি","মানুষের সাথে থাকলে আরও বেশি আনন্দ পাই"],
+      friends:["মন দিয়ে কথা শোনা মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","উষ্ণ হৃদয়ের মানুষ","যার সাথে ভ্রমণ করা আনন্দের"],
+      partner:{label:"নতুন অভিজ্ঞতা তৈরি ও সংযোগ ঘটানো চ্যালেঞ্জপ্রিয় ভ্রমণকারী", reason:"নতুন অভিজ্ঞতা যোগ করে আরও সমৃদ্ধ স্মৃতি তৈরি করা যায়"},
+      trips:["🌇 সূর্যাস্ত ক্রুজ","🏮 তাইওয়ানের নাইট মার্কেট ভ্রমণ","🎪 স্থানীয় উৎসব অভিজ্ঞতা","🌸 আবেগঘন অলিগলি ভ্রমণ"]},
+    C:{code:"C", emoji:"🐉", name:"ড্রাগন ধরনের ভ্রমণকারী", color:"var(--brand-green)",
+      tagline:"যেখানেই যান, নিজেই মূল চরিত্র — তারকার মতো এক ভ্রমণকারী",
+      keywords:["#অভিযোজন_ক্ষমতা","#ভারসাম্য","#নমনীয়তা","#পরিস্থিতি_বুঝে_চলা","#বহুমুখী_প্রতিভা"],
+      traits:["পরিস্থিতি অনুযায়ী নমনীয়ভাবে চলি","পরিকল্পনা ও তাৎক্ষণিকতার মধ্যে ভারসাম্য খুঁজি","সবার সাথেই সহজে মিশে যাই","নতুন পরিবেশেও দ্রুত মানিয়ে নিই"],
+      friends:["যেকোনো জায়গায় মানিয়ে নেওয়া মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","ভারসাম্যপূর্ণ মানুষ","বহুমুখী প্রতিভার মানুষ"],
+      partner:{label:"খুঁটিনাটিতে মনোযোগী পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"সুনিপুণ পরিকল্পনা দিয়ে ভ্রমণকে আরও পরিপূর্ণ করে"},
+      trips:["🎒 দক্ষিণ-পূর্ব এশিয়ায় ব্যাকপ্যাকিং","🚐 নিউজিল্যান্ডে ক্যাম্পারভ্যান ভ্রমণ","🌍 বিশ্ব ভ্রমণ","🏖 বালিতে স্বাধীন ভ্রমণ"]}
+  };
+  var ANIMAL_SUFFIX = {ko:"여행자", bn:"ভ্রমণকারী"}; // stripped from t.name to get the 동물유형 (animal-type) sheet value
+
+  /* ============ UI chrome strings (everything on-screen besides QUESTIONS/TYPES) ============ */
+  var STR_KO = {
+    eyebrowIntro:"✈︎ TRIP PERSONALITY",
+    title:"여행 취향 테스트! <br>나는 어떤 동물일까?",
+    lede:"열심히 일한 나에게 찾아온 특별한 선물! <br>황금 같은 5일의 휴가가 생겼어요. <br>어디로 갈지, 누구와 갈지, 무엇을 할지 여행 취향으로 알아보는 나의 진짜 모습은?",
+    startBtn:"✈︎ 시작하기",
+    footnote:"본 사이트는 개인정보를 수집하지 않습니다",
+    eyebrowQuiz:"TRAVEL ITINERARY",
+    prevBtn:"← 이전 질문",
+    typeBadge:"TYPE",
+    barD:"주도형(D)", barA:"분석형(A)", barI:"관계형(I)",
+    sectionKeywords:"나의 여행 키워드",
+    sectionTraits:"여행할 때 나는?",
+    sectionFriends:"친구들이 보는 나",
+    sectionPartner:"나와 잘 맞는 여행 파트너",
+    sectionTrips:"추천 여행",
+    restartBtn:"다시 테스트하기",
+    shareBtn:"📤 공유하기",
+    shareSheetTitle:"결과 공유하기",
+    shareKakao:"카카오톡",
+    shareSms:"문자 메시지",
+    shareCopy:"링크 복사",
+    shareCancel:"취소",
+    shareCopied:"링크가 복사되었습니다!",
+    shareTextTemplate:"나는 '{name}'였어! ✈️ 너는 어떤 여행 유형일지 테스트해볼래?",
+    sharedBanner:"✈︎ 친구가 공유한 여행 유형이에요",
+    sharedCta:"나도 테스트해보기"
+  };
+  var STR_BN = {
+    eyebrowIntro:"✈︎ TRIP PERSONALITY",
+    title:"ভ্রমণ পছন্দের পরীক্ষা! <br>আমি কোন প্রাণী?",
+    lede:"কঠোর পরিশ্রমের পর নিজের জন্য এক বিশেষ উপহার! <br>সোনার মতো মূল্যবান ৫ দিনের ছুটি পেয়ে গেছেন। <br>কোথায় যাবেন, কার সাথে যাবেন, কী করবেন — ভ্রমণের পছন্দ দিয়েই জেনে নিন আপনার আসল রূপ কেমন?",
+    startBtn:"✈︎ শুরু করুন",
+    footnote:"এই ওয়েবসাইট কোনো ব্যক্তিগত তথ্য সংগ্রহ করে না",
+    eyebrowQuiz:"TRAVEL ITINERARY",
+    prevBtn:"← আগের প্রশ্ন",
+    typeBadge:"TYPE",
+    barD:"নেতৃত্বপ্রবণ (D)", barA:"বিশ্লেষণাত্মক (A)", barI:"সম্পর্কভিত্তিক (I)",
+    sectionKeywords:"আমার ভ্রমণ কীওয়ার্ড",
+    sectionTraits:"ভ্রমণের সময় আমি",
+    sectionFriends:"বন্ধুরা আমাকে যেভাবে দেখে",
+    sectionPartner:"আমার সাথে মানানসই ভ্রমণসঙ্গী",
+    sectionTrips:"প্রস্তাবিত ভ্রমণ",
+    restartBtn:"পুনরায় টেস্ট করুন",
+    shareBtn:"📤 শেয়ার করুন",
+    shareSheetTitle:"ফলাফল শেয়ার করুন",
+    shareKakao:"ফেসবুক মেসেঞ্জার",
+    shareSms:"এসএমএস বার্তা",
+    shareCopy:"লিংক কপি করুন",
+    shareCancel:"বাতিল",
+    shareCopied:"লিংক কপি হয়েছে!",
+    shareTextTemplate:"আমি '{name}' হয়েছি! ✈️ তুমিও পরীক্ষা করে দেখো তুমি কোন ধরনের ভ্রমণকারী!",
+    sharedBanner:"✈︎ এটি বন্ধুর শেয়ার করা ভ্রমণ ধরন",
+    sharedCta:"আমিও পরীক্ষা করব"
+  };
+
+  /* ============ active language ============ */
+  // QUESTIONS/TYPES/STRX are reassigned by setLang() below; every render function
+  // reads through these three names so switching language never needs its own
+  // per-screen logic. Since QUESTIONS_KO/QUESTIONS_BN share identical option order
+  // and D/A/I points (only text differs), switching mid-quiz is safe and never
+  // resets progress.
+  var QUESTIONS, TYPES, STRX;
+  function setLang(lang){
+    state.lang = lang;
+    QUESTIONS = (lang==="bn") ? QUESTIONS_BN : QUESTIONS_KO;
+    TYPES     = (lang==="bn") ? TYPES_BN     : TYPES_KO;
+    STRX      = (lang==="bn") ? STR_BN       : STR_KO;
+    var sw = document.getElementById("langSwitch");
+    if(sw){
+      sw.querySelectorAll(".langbtn").forEach(function(b){
+        b.classList.toggle("active", b.getAttribute("data-lang")===lang);
+      });
+    }
+  }
 
   /* ============ scoring ============ */
   function computeResult(answers){
@@ -384,7 +631,7 @@
     var gap12=scores[top]-scores[sorted[1]];
     var gap13=scores[top]-scores[third];
     var type;
-    if(gap12/TOTAL_POINTS >= 0.20){
+    if(gap12/TOTAL_POINTS >= 0.15){
       type=top;
     } else if(gap13/TOTAL_POINTS <= 0.05){
       type="C";
@@ -401,7 +648,8 @@
   }
 
   /* ============ state ============ */
-  var state = { screen:"intro", qi:0, answers:new Array(QUESTIONS.length).fill(null), record:null };
+  var state = { screen:"intro", qi:0, answers:new Array(QUESTIONS_KO.length).fill(null), record:null, lang:"ko" };
+  setLang("ko");
 
   var app = document.getElementById("app");
   var globalfoot = document.getElementById("globalfoot");
@@ -412,11 +660,11 @@
   function renderIntro(){
     globalfoot.textContent = "";
     app.innerHTML =
-      '<span class="eyebrow">✈︎ TRIP PERSONALITY</span>' +
-      '<h1 class="title">여행 취향 테스트! <br>나는 어떤 동물일까?</h1>' +
-      '<p class="lede">열심히 일한 나에게 찾아온 특별한 선물! <br>황금 같은 5일의 휴가가 생겼어요. <br>어디로 갈지, 누구와 갈지, 무엇을 할지 여행 취향으로 알아보는 나의 진짜 모습은?</p>' +
-      '<button class="btn gold" id="startBtn" type="button">✈︎ 시작하기</button>' +
-      '<p class="footnote">12개 질문 · 약 2분 소요 · 제출 즉시 결과 확인</p>';
+      '<span class="eyebrow">'+STRX.eyebrowIntro+'</span>' +
+      '<h1 class="title">'+STRX.title+'</h1>' +
+      '<p class="lede">'+STRX.lede+'</p>' +
+      '<button class="btn gold" id="startBtn" type="button">'+STRX.startBtn+'</button>' +
+      '<p class="footnote">'+STRX.footnote+'</p>';
     document.getElementById("startBtn").addEventListener("click", function(){
       state.qi=0; state.answers=new Array(QUESTIONS.length).fill(null); state.screen="quiz"; render();
     });
@@ -433,12 +681,12 @@
     }).join("");
     app.innerHTML =
       '<div class="progresswrap">' +
-        '<div class="progresstop"><span class="qn">TRAVEL ITINERARY</span><span class="qn"><b>'+(qi+1)+'</b> / '+QUESTIONS.length+'</span></div>' +
+        '<div class="progresstop"><span class="qn">'+STRX.eyebrowQuiz+'</span><span class="qn"><b>'+(qi+1)+'</b> / '+QUESTIONS.length+'</span></div>' +
         '<div class="flightpath"><div class="track"></div><div class="fill" style="width:'+pct+'%;"></div><div class="plane" style="left:'+pct+'%;">✈︎</div></div>' +
       '</div>' +
       '<p class="qtext">'+esc(q.q)+'</p>' +
       '<div class="options">'+optsHtml+'</div>' +
-      (qi>0 ? '<div class="btnrow" style="margin-top:18px;"><button class="btn ghost" id="prevBtn" type="button">← 이전 질문</button></div>' : '');
+      (qi>0 ? '<div class="btnrow" style="margin-top:18px;"><button class="btn ghost" id="prevBtn" type="button">'+STRX.prevBtn+'</button></div>' : '');
     var optionEls = app.querySelectorAll(".option");
     optionEls.forEach(function(el){
       el.addEventListener("click", function(){
@@ -468,9 +716,15 @@
   }
 
   /* ============ Google Form submission ============ */
+  var LANG_LABEL = {ko:"한국어", bn:"벵골어"}; // value written to the new "언어구분" column
   function buildEntryParams(record){
     var t = TYPES[record.type];
     var params = {};
+    // "언어구분" -- which language version the response was taken in (한국어/벵골어).
+    // Wired to entry.<ID> once that field exists as the first question on the Form
+    // (see ENTRY.language below); until then this is a no-op key Google silently
+    // ignores, so submission still works, it just isn't captured in the Sheet yet.
+    if(ENTRY.language){ params[ENTRY.language] = LANG_LABEL[state.lang] || LANG_LABEL.ko; }
     record.answers.forEach(function(a, idx){
       var val = (a===null||a===undefined) ? "" : String(a+1);
       params[ENTRY_Q[idx]] = val;
@@ -479,10 +733,12 @@
     params[ENTRY.scoreA]   = String(record.scores.A);
     params[ENTRY.scoreI]   = String(record.scores.I);
     // Split into two columns in the sheet: 결과유형 (code, e.g. "AI") and
-    // 동물유형 (animal name, e.g. "코끼리형" -- "여행자" suffix dropped here
-    // since it's just the display copy for the on-screen name, not the type label).
+    // 동물유형 (animal name, e.g. "코끼리형" -- the language's own "traveler" suffix
+    // dropped here since it's just the display copy for the on-screen name, not the
+    // type label).
     params[ENTRY.typeCode] = record.type;
-    params[ENTRY.typeName] = t.name.replace(/\s*여행자$/, "");
+    var suffix = ANIMAL_SUFFIX[state.lang] || ANIMAL_SUFFIX.ko;
+    params[ENTRY.typeName] = t.name.replace(new RegExp("\\s*"+suffix+"$"), "");
     return params;
   }
 
@@ -544,21 +800,139 @@
       '<div style="--type-color:'+t.color+'; --type-tint: color-mix(in srgb, '+t.color+' 16%, var(--paper-soft));">' +
       '<div class="resulthead">' +
         '<div class="stamp">'+t.emoji+'</div>' +
-        '<span class="code">TYPE · '+t.code+'</span>' +
+        '<span class="code">'+STRX.typeBadge+' · '+t.code+'</span>' +
         '<h2>'+esc(t.name)+'</h2>' +
         '<p class="tagline">'+esc(t.tagline)+'</p>' +
       '</div>' +
       '<div class="stub"></div>' +
-      '<div class="section">' + bar("주도형(D)",s.D) + bar("분석형(A)",s.A) + bar("관계형(I)",s.I) + '</div>' +
-      '<div class="section"><h3>나의 여행 키워드</h3><div class="tags">'+t.keywords.map(function(k){return '<span class="tag">'+esc(k)+'</span>';}).join("")+'</div></div>' +
-      '<div class="section trait-block trait-self"><h3><span class="ico">&#9992;&#65039;</span>여행할 때 나는?</h3><ul class="list">'+t.traits.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
-      '<div class="section trait-block trait-friends"><h3><span class="ico">&#128064;</span>친구들이 보는 나</h3><ul class="list">'+t.friends.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
-      '<div class="section"><h3>추천 여행</h3><div class="trips">'+t.trips.map(function(x){return '<span class="trip">'+esc(x)+'</span>';}).join("")+'</div></div>' +
-      '<div class="btnrow" style="margin-top:24px;"><button class="btn ghost" id="restartBtn" type="button">다시 테스트하기</button></div>' +
+      '<div class="section">' + bar(STRX.barD,s.D) + bar(STRX.barA,s.A) + bar(STRX.barI,s.I) + '</div>' +
+      '<div class="section"><h3>'+STRX.sectionKeywords+'</h3><div class="tags">'+t.keywords.map(function(k){return '<span class="tag">'+esc(k)+'</span>';}).join("")+'</div></div>' +
+      '<div class="section trait-block trait-self"><h3><span class="ico">&#9992;&#65039;</span>'+STRX.sectionTraits+'</h3><ul class="list">'+t.traits.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
+      '<div class="section trait-block trait-friends"><h3><span class="ico">&#128064;</span>'+STRX.sectionFriends+'</h3><ul class="list">'+t.friends.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
+      '<div class="section trait-block trait-partner"><h3><span class="ico">&#129309;</span>'+STRX.sectionPartner+'</h3><p class="partner-name">'+esc(t.partner.label)+'</p><p class="partner-reason">'+esc(t.partner.reason)+'</p></div>' +
+      '<div class="section"><h3>'+STRX.sectionTrips+'</h3><div class="trips">'+t.trips.map(function(x){return '<span class="trip">'+esc(x)+'</span>';}).join("")+'</div></div>' +
+      '<div class="btnrow" style="margin-top:24px;"><button class="btn ghost" id="restartBtn" type="button">'+STRX.restartBtn+'</button></div>' +
+      '<div class="btnrow" style="margin-top:10px;"><button class="btn share" id="shareBtn" type="button">'+STRX.shareBtn+'</button></div>' +
       '</div>';
     document.getElementById("restartBtn").addEventListener("click", function(){
-      state = { screen:"intro", name:"", empId:"", qi:0, answers:new Array(QUESTIONS.length).fill(null), record:null };
+      var lang = state.lang;
+      state = { screen:"intro", name:"", empId:"", qi:0, answers:new Array(QUESTIONS.length).fill(null), record:null, lang:lang };
       render();
+    });
+    document.getElementById("shareBtn").addEventListener("click", function(){
+      shareResult(record);
+    });
+  }
+
+  /* ============ render: shared (a friend's link, opened via ?r=TYPE) ============ */
+  function renderShared(typeCode){
+    var t = TYPES[typeCode];
+    app.innerHTML =
+      '<div style="--type-color:'+t.color+'; --type-tint: color-mix(in srgb, '+t.color+' 16%, var(--paper-soft));">' +
+      '<p class="shared-banner">'+STRX.sharedBanner+'</p>' +
+      '<div class="resulthead">' +
+        '<div class="stamp">'+t.emoji+'</div>' +
+        '<span class="code">'+STRX.typeBadge+' · '+t.code+'</span>' +
+        '<h2>'+esc(t.name)+'</h2>' +
+        '<p class="tagline">'+esc(t.tagline)+'</p>' +
+      '</div>' +
+      '<div class="stub"></div>' +
+      '<div class="section"><h3>'+STRX.sectionKeywords+'</h3><div class="tags">'+t.keywords.map(function(k){return '<span class="tag">'+esc(k)+'</span>';}).join("")+'</div></div>' +
+      '<div class="section trait-block trait-self"><h3><span class="ico">&#9992;&#65039;</span>'+STRX.sectionTraits+'</h3><ul class="list">'+t.traits.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
+      '<div class="section trait-block trait-friends"><h3><span class="ico">&#128064;</span>'+STRX.sectionFriends+'</h3><ul class="list">'+t.friends.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
+      '<div class="section trait-block trait-partner"><h3><span class="ico">&#129309;</span>'+STRX.sectionPartner+'</h3><p class="partner-name">'+esc(t.partner.label)+'</p><p class="partner-reason">'+esc(t.partner.reason)+'</p></div>' +
+      '<div class="section"><h3>'+STRX.sectionTrips+'</h3><div class="trips">'+t.trips.map(function(x){return '<span class="trip">'+esc(x)+'</span>';}).join("")+'</div></div>' +
+      '<div class="btnrow" style="margin-top:24px;"><button class="btn gold" id="sharedCtaBtn" type="button">'+STRX.sharedCta+'</button></div>' +
+      '</div>';
+    document.getElementById("sharedCtaBtn").addEventListener("click", function(){
+      var lang = state.lang;
+      // Drop the ?r=/&lang= params from the address bar so a refresh or a
+      // later share from this same tab starts a clean quiz, not the friend's result.
+      if(window.history && window.history.replaceState){
+        window.history.replaceState(null, "", location.pathname);
+      }
+      state = { screen:"intro", qi:0, answers:new Array(QUESTIONS.length).fill(null), record:null, lang:lang };
+      render();
+    });
+  }
+
+  /* ============ share: build link, trigger native share or a 3-option fallback sheet ============ */
+  function buildShareUrl(typeCode, lang){
+    return location.origin + location.pathname + "?r=" + encodeURIComponent(typeCode) + "&lang=" + encodeURIComponent(lang);
+  }
+
+  function copyToClipboard(text, cb){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(cb, function(){ fallbackCopy(text, cb); });
+    } else {
+      fallbackCopy(text, cb);
+    }
+  }
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      if(cb) cb();
+    }catch(e){}
+  }
+
+  // Primary path (most iOS/Android mobile browsers): hand the link+text to the
+  // OS's own native share sheet. This is what actually produces the "recent
+  // KakaoTalk chat" quick-share row on iOS and the native share targets on
+  // Android -- that behavior lives in the OS/KakaoTalk app, not in page code,
+  // and the only way to reach it from a web page is navigator.share().
+  // Fallback path (desktop / older browsers without navigator.share): a small
+  // custom sheet offering the same 3 choices explicitly.
+  function shareResult(record){
+    var t = TYPES[record.type];
+    var url = buildShareUrl(record.type, state.lang);
+    var text = STRX.shareTextTemplate.replace("{name}", t.name);
+    if(navigator.share){
+      navigator.share({title: document.title, text: text, url: url}).catch(function(){ /* user cancelled -- no-op */ });
+    } else {
+      openShareSheet(text, url);
+    }
+  }
+
+  function openShareSheet(text, url){
+    var root = document.getElementById("shareSheetRoot");
+    function close(){ root.innerHTML = ""; }
+    root.innerHTML =
+      '<div class="sharesheet-backdrop" id="shareBackdrop"></div>' +
+      '<div class="sharesheet" role="dialog" aria-modal="true" aria-label="'+esc(STRX.shareSheetTitle)+'">' +
+        '<div class="sharesheet-handle"></div>' +
+        '<p class="sharesheet-title">'+STRX.shareSheetTitle+'</p>' +
+        '<button type="button" class="sharesheet-opt" id="shareKakao"><span class="sharesheet-ico '+(state.lang==="bn"?"messenger":"kakao")+'">&#128172;</span><span>'+STRX.shareKakao+'</span></button>' +
+        '<button type="button" class="sharesheet-opt" id="shareSms"><span class="sharesheet-ico sms">&#9993;&#65039;</span><span>'+STRX.shareSms+'</span></button>' +
+        '<button type="button" class="sharesheet-opt" id="shareCopy"><span class="sharesheet-ico copy">&#128279;</span><span>'+STRX.shareCopy+'</span></button>' +
+        '<button type="button" class="sharesheet-cancel" id="shareCancel">'+STRX.shareCancel+'</button>' +
+        '<p class="sharesheet-toast" id="shareToast" aria-live="polite"></p>' +
+      '</div>';
+    function toast(msg){
+      var el = document.getElementById("shareToast");
+      if(!el) return;
+      el.textContent = msg;
+      el.classList.add("show");
+      window.setTimeout(close, 1200);
+    }
+    document.getElementById("shareBackdrop").addEventListener("click", close);
+    document.getElementById("shareCancel").addEventListener("click", close);
+    document.getElementById("shareKakao").addEventListener("click", function(){
+      // No official SDK/app key for KakaoTalk or Messenger is wired into this
+      // page, so the honest best-effort fallback here is: copy the link and
+      // tell people to paste it into whichever app this button names.
+      copyToClipboard(text + " " + url, function(){ toast(STRX.shareCopied); });
+    });
+    document.getElementById("shareSms").addEventListener("click", function(){
+      var isIOS = /iP(hone|od|ad)/.test(navigator.userAgent || "");
+      var sep = isIOS ? "&" : "?";
+      window.location.href = "sms:" + sep + "body=" + encodeURIComponent(text + " " + url);
+    });
+    document.getElementById("shareCopy").addEventListener("click", function(){
+      copyToClipboard(url, function(){ toast(STRX.shareCopied); });
     });
   }
 
@@ -567,7 +941,37 @@
     if(state.screen==="intro") renderIntro();
     else if(state.screen==="quiz") renderQuiz();
     else if(state.screen==="result") renderResult(state.record);
+    else if(state.screen==="shared") renderShared(state.sharedType);
   }
+
+  /* ============ language switcher (top-right, persists across screens) ============ */
+  var langSwitchEl = document.getElementById("langSwitch");
+  langSwitchEl.querySelectorAll(".langbtn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var lang = btn.getAttribute("data-lang");
+      if(lang === state.lang) return;
+      setLang(lang);
+      render();
+    });
+  });
+
+  /* ============ shared-link entry point ============ */
+  // A link built by shareResult() looks like ?r=AI&lang=ko. If this page was
+  // opened that way, skip the intro and show the friend's result instead,
+  // with a "나도 테스트해보기" CTA that drops into the normal intro/quiz flow.
+  (function checkSharedLink(){
+    try{
+      var params = new URLSearchParams(location.search);
+      var r = params.get("r");
+      var lang = params.get("lang");
+      if(lang !== "bn") lang = "ko";
+      if(r && TYPES_KO.hasOwnProperty(r)){
+        setLang(lang);
+        state.screen = "shared";
+        state.sharedType = r;
+      }
+    }catch(e){ /* malformed/unsupported URL API -- fall through to normal intro */ }
+  })();
 
   render();
 })();
