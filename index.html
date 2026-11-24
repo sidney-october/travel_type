@@ -268,6 +268,16 @@
   <iframe name="hiddenSubmitFrame" id="hiddenSubmitFrame" style="display:none;" title="submit" aria-hidden="true"></iframe>
   <div id="shareSheetRoot"></div>
 
+<!-- Google Analytics 4 -- measures quiz starts/completions and share-button clicks,
+     broken down by language (ko/bn) and result type, so usage can be compared across
+     the two language versions. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QEZBTZQ8RY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-QEZBTZQ8RY');
+</script>
 <!-- Kakao JavaScript SDK -- only used for the "카카오톡" share button inside the
      custom fallback sheet (openShareSheet), so KakaoTalk sharing works even from
      inside browsers/webviews that don't support navigator.share (e.g. KakaoTalk's
@@ -289,6 +299,16 @@
       Kakao.init(KAKAO_JS_KEY);
     }
   }catch(e){ /* SDK missing/blocked -- shareKakao() below falls back to copy-link */ }
+
+  /* ============ Google Analytics 4 custom events ============ */
+  // Thin, defensive wrapper: if gtag.js failed to load (ad-blocker, offline,
+  // blocked in a preview sandbox, etc.) this silently no-ops instead of
+  // throwing and breaking the quiz.
+  function gaEvent(name, params){
+    try{
+      if(typeof gtag === "function"){ gtag("event", name, params || {}); }
+    }catch(e){ /* analytics unavailable -- never let this break the app */ }
+  }
 
   /* ============ Google Form submission target ============ */
   // Responses are collected centrally in a linked Google Sheet via this
@@ -702,6 +722,7 @@
       '<button class="btn gold" id="startBtn" type="button">'+STRX.startBtn+'</button>' +
       '<p class="footnote">'+STRX.footnote+'</p>';
     document.getElementById("startBtn").addEventListener("click", function(){
+      gaEvent("quiz_start", {lang: state.lang});
       state.qi=0; state.answers=new Array(QUESTIONS.length).fill(null); state.screen="quiz"; render();
     });
   }
@@ -748,6 +769,7 @@
     };
     state.record = record;
     state.screen = "result";
+    gaEvent("quiz_complete", {lang: state.lang, result_type: result.type});
     submitResponse(record);
   }
 
@@ -923,6 +945,7 @@
   // Fallback path (desktop / older browsers without navigator.share): a small
   // custom sheet offering the same 3 choices explicitly.
   function shareResult(record){
+    gaEvent("share_click", {lang: state.lang, result_type: record.type});
     var t = TYPES[record.type];
     var url = buildShareUrl(record.type, state.lang);
     var text = STRX.shareTextTemplate.replace("{name}", t.title);
@@ -935,23 +958,25 @@
     }catch(e){ canUseNative = false; }
     if(canUseNative){
       try{
-        navigator.share(payload).catch(function(err){
+        navigator.share(payload).then(function(){
+          gaEvent("share_sent", {lang: state.lang, result_type: record.type, channel: "native"});
+        }).catch(function(err){
           // AbortError = the person opened the native sheet and backed out themselves;
           // leave that alone. Any other rejection (a permissions-policy block, a
           // webview that advertises the API but refuses the call, etc.) means the
           // native sheet never actually appeared, so hand them the custom one instead
           // of silently doing nothing.
-          if(!err || err.name !== "AbortError"){ openShareSheet(text, url); }
+          if(!err || err.name !== "AbortError"){ openShareSheet(text, url, record.type); }
         });
       }catch(e){
-        openShareSheet(text, url);
+        openShareSheet(text, url, record.type);
       }
     } else {
-      openShareSheet(text, url);
+      openShareSheet(text, url, record.type);
     }
   }
 
-  function openShareSheet(text, url){
+  function openShareSheet(text, url, typeCode){
     var root = document.getElementById("shareSheetRoot");
     function close(){ root.innerHTML = ""; }
     root.innerHTML =
@@ -999,17 +1024,21 @@
         }catch(e){ sentViaKakao = false; }
       }
       if(!sentViaKakao){
+        gaEvent("share_sent", {lang: state.lang, result_type: typeCode, channel: state.lang==="ko" ? "kakao_copy_fallback" : "messenger_copy"});
         copyToClipboard(text + " " + url, function(){ toast(STRX.shareCopied); });
       } else {
+        gaEvent("share_sent", {lang: state.lang, result_type: typeCode, channel: "kakao"});
         close();
       }
     });
     document.getElementById("shareSms").addEventListener("click", function(){
+      gaEvent("share_sent", {lang: state.lang, result_type: typeCode, channel: "sms"});
       var isIOS = /iP(hone|od|ad)/.test(navigator.userAgent || "");
       var sep = isIOS ? "&" : "?";
       window.location.href = "sms:" + sep + "body=" + encodeURIComponent(text + " " + url);
     });
     document.getElementById("shareCopy").addEventListener("click", function(){
+      gaEvent("share_sent", {lang: state.lang, result_type: typeCode, channel: "copy_link"});
       copyToClipboard(url, function(){ toast(STRX.shareCopied); });
     });
   }
