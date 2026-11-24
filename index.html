@@ -3,7 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>여행 취향 테스트_v2_개인정보 비적재</title>
+<title>Travel-style</title>
+<meta name="description" content="열심히 일한 나에게 찾아온 특별한 선물! 여행 취향으로 알아보는 나의 진짜 모습은?">
+<!-- KakaoTalk/카카오톡 및 기타 메신저 링크 공유 시 썸네일이 뜨도록 하는 Open Graph 태그.
+     og:image는 같은 저장소 루트에 함께 올리는 og-image.png를 가리키며, 반드시 index.html과
+     같은 폴더(루트)에 두어야 해요. 아직 HTTPS가 활성화되지 않았다면 http로 유지하고,
+     "Enforce HTTPS"가 켜지면 아래 URL들을 https로 바꿔주세요. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="여행 취향 테스트! 나는 어떤 동물일까?">
+<meta property="og:description" content="열심히 일한 나에게 찾아온 특별한 선물! 여행 취향으로 알아보는 나의 진짜 모습은?">
+<meta property="og:image" content="http://travel-style.co.kr/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
@@ -210,12 +220,13 @@
   .trait-block{border-radius:16px; padding:16px 16px 14px; margin-top:16px;}
   .trait-block h3{display:flex; align-items:center; gap:6px; color:var(--type-color, var(--ink-faint)); margin-bottom:12px;}
   .trait-block h3 .ico{font-size:15px;}
-  .trait-self{background:transparent; border:1.5px solid color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 45%, transparent);}
+  .trait-self{background:var(--type-tint, var(--paper-soft)); border:1.5px solid color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 45%, transparent); box-shadow:0 8px 20px -14px color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 60%, transparent);}
   .trait-friends{background:transparent; border:1.5px dashed color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 45%, transparent);}
-  /* New "나와 잘 맞는 여행 파트너" block -- same .trait-block box model as the two
+  /* "나와 잘 맞는 여행 파트너" block -- same .trait-block box model as the two
      blocks above (padding/radius/margin-top all inherited), only background+border
-     differ, so it drops in without touching their layout. */
-  .trait-partner{background:var(--type-tint, var(--paper-soft)); border:1.5px solid color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 30%, transparent);}
+     differ, so it drops in without touching their layout. Kept as an outline (no
+     fill) so "여행할 때 나는?" (.trait-self) reads as the most prominent block. */
+  .trait-partner{background:transparent; border:1.5px dashed color-mix(in srgb, var(--type-color, var(--brand-dark-blue)) 30%, transparent);}
   .trait-partner .partner-name{font-size:14.5px; font-weight:700; color:var(--type-color, var(--ink)); margin-bottom:5px; line-height:1.45;}
   .trait-partner .partner-reason{font-size:14px; line-height:1.6; color:var(--ink-soft); margin:0;}
   .tags{display:flex; flex-wrap:wrap; gap:7px;}
@@ -423,49 +434,49 @@
   var TOTAL_POINTS = 77; // fixed sum of each trait's points across the whole test
 
   var TYPES_KO = {
-    D:{code:"D", emoji:"🐆", name:"치타형 여행자", color:"var(--brand-berry)",
+    D:{code:"D", emoji:"🐆", name:"치타형 여행자", title:"도전형 여행자", color:"var(--brand-berry)",
       tagline:"새로운 경험을 이끄는 도전형 여행자",
       keywords:["#추진력","#결단력","#도전정신","#자신감","#행동력"],
       traits:["여행지가 정해지면 바로 움직여요","새로운 경험을 즐겨요","망설이기보다 실행이 빨라요","여행의 중심에서 분위기를 이끌어요"],
       friends:["결정이 빠른 사람","추진력이 있는 사람","에너지가 넘치는 사람","든든하게 이끄는 사람"],
       partner:{label:"일정을 세심하게 챙겨주는 계획형 여행자", reason:"실행력과 꼼꼼함이 만나 여행의 완성도가 높아져요"},
       trips:["🏜 두바이 사막 ATV 투어","🏔 스위스 패러글라이딩","🚗 미국 서부 로드트립","🎢 유니버설 스튜디오"]},
-    DA:{code:"DA", emoji:"🦅", name:"독수리형 여행자", color:"var(--brand-purple)",
+    DA:{code:"DA", emoji:"🦅", name:"독수리형 여행자", title:"전략형 여행자", color:"var(--brand-purple)",
       tagline:"계획과 실행을 모두 갖춘 전략형 여행자",
       keywords:["#전략적사고","#계획성","#문제해결","#효율성","#목표지향"],
       traits:["큰 그림부터 생각해요","효율적인 동선을 중요하게 생각해요","상황이 생겨도 침착하게 해결해요","계획과 실행의 균형을 추구해요"],
       friends:["믿고 맡길 수 있는 사람","똑똑하게 여행하는 사람","계획을 잘 세우는 사람","여행 총무 같은 사람"],
       partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"전략형의 계획을 존중하면서 부드럽게 보완해줘요"},
       trips:["🏛 로마 역사 탐방","🚄 스위스 기차 일주 여행","🌉 싱가포르 시티투어","🏯 교토 문화유산 여행"]},
-    DI:{code:"DI", emoji:"🐎", name:"말형 여행자", color:"var(--brand-yellow)",
+    DI:{code:"DI", emoji:"🐎", name:"말형 여행자", title:"소통형 여행자", color:"var(--brand-yellow)",
       tagline:"사람과 경험을 함께 즐기는 에너지형 여행자",
       keywords:["#친화력","#리더십","#영향력","#활동성","#도전정신"],
       traits:["함께하는 순간을 중요하게 생각해요","새로운 활동에 적극적으로 참여해요","분위기를 자연스럽게 이끌어요","사람들과 금방 친해져요"],
       friends:["같이 있으면 재미있는 사람","에너지가 좋은 사람","분위기를 띄우는 사람","사람을 잘 이끄는 사람"],
       partner:{label:"여행의 완성도를 높이는 계획형 여행자", reason:"재미추구 여행에 계획을 추가해서 완성도를 높여줘요"},
       trips:["🎭 브라질 리우 카니발","🎶 해외 뮤직 페스티벌","🎡 독일 옥토버페스트","🎉 현지 축제 체험 여행"]},
-    A:{code:"A", emoji:"🦉", name:"올빼미형 여행자", color:"var(--brand-dark-blue)",
+    A:{code:"A", emoji:"🦉", name:"올빼미형 여행자", title:"계획형 여행자", color:"var(--brand-dark-blue)",
       tagline:"꼼꼼하게 준비하는 계획형 여행자",
       keywords:["#분석력","#계획성","#꼼꼼함","#체계성","#안정성"],
       traits:["정보를 충분히 찾아봐요","계획을 세우는 과정이 즐거워요","예상 가능한 여행을 선호해요","준비가 되어 있어야 마음이 편해요"],
       friends:["계획적인 사람","준비성이 좋은 사람","믿음직한 사람","꼼꼼한 사람"],
       partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"꼼꼼하고 신중한 나에게 정서적인 편안함을 더해줘요"},
       trips:["🏛 루브르 박물관 투어","🍷 프랑스 와이너리 여행","🏯 일본 역사·문화 여행","🍽 미슐랭 맛집 탐방"]},
-    AI:{code:"AI", emoji:"🐘", name:"코끼리형 여행자", color:"var(--brand-blue)",
+    AI:{code:"AI", emoji:"🐘", name:"코끼리형 여행자", title:"배려형 여행자", color:"var(--brand-blue)",
       tagline:"배려와 계획을 모두 갖춘 신뢰형 여행자",
       keywords:["#배려심","#책임감","#신뢰","#공감","#계획성"],
       traits:["모두가 만족하는 여행을 원해요","사람도 일정도 꼼꼼히 챙겨요","안정감 있는 여행을 선호해요","함께하는 사람을 먼저 생각해요"],
       friends:["믿고 의지할 수 있는 사람","함께 있으면 편한 사람","배려심이 많은 사람","책임감 있는 사람"],
       partner:{label:"여행의 즐거움을 만드는 소통형 여행자", reason:"안정적인 여행에 재미를 더해 만족도를 최상으로 높여줘요"},
       trips:["🚂 스위스 파노라마 열차","🌲 캐나다 국립공원 여행","🏡 북유럽 힐링 여행","🌌 핀란드 오로라 여행"]},
-    I:{code:"I", emoji:"🐬", name:"돌고래형 여행자", color:"var(--brand-teal)",
+    I:{code:"I", emoji:"🐬", name:"돌고래형 여행자", title:"공감형 여행자", color:"var(--brand-teal)",
       tagline:"함께하는 순간을 소중히 여기는 공감형 여행자",
       keywords:["#관계중심","#공감능력","#배려심","#분위기메이커","#소통"],
       traits:["누구와 가는지가 중요해요","분위기를 즐기는 편이에요","추억을 오래 기억해요","사람들과 함께할 때 더 즐거워요"],
       friends:["이야기를 잘 들어주는 사람","함께 있으면 편한 사람","따뜻한 사람","여행 가기 좋은 사람"],
       partner:{label:"새로운 경험을 만들고 연결하는 도전형 여행자", reason:"새로운 경험을 추가해서 더욱 풍성한 추억을 만들수 있어요"},
       trips:["🌇 노을 크루즈","🏮 대만 야시장 투어","🎪 현지 축제 체험","🌸 감성 골목 여행"]},
-    C:{code:"C", emoji:"🐉", name:"용형 여행자", color:"var(--brand-green)",
+    C:{code:"C", emoji:"🐉", name:"용형 여행자", title:"올라운더 여행자", color:"var(--brand-green)",
       tagline:"어디서든 내가 주인공인 연예인 같은 여행자",
       keywords:["#적응력","#균형감각","#유연성","#융통성","#다재다능"],
       traits:["상황에 맞게 유연하게 움직여요","계획과 즉흥을 모두 즐겨요","누구와도 잘 어울려요","새로운 환경에도 금방 적응해요"],
@@ -478,49 +489,49 @@
   // site's copy has been customized away from the spec (tagline/traits/friends for a
   // few types). Same 7 codes/colors/emoji -- only display text differs.
   var TYPES_BN = {
-    D:{code:"D", emoji:"🐆", name:"চিতা ধরনের ভ্রমণকারী", color:"var(--brand-berry)",
+    D:{code:"D", emoji:"🐆", name:"চিতা ধরনের ভ্রমণকারী", title:"চ্যালেঞ্জপ্রিয় ভ্রমণকারী", color:"var(--brand-berry)",
       tagline:"নতুন অভিজ্ঞতার পথ দেখানো চ্যালেঞ্জপ্রিয় ভ্রমণকারী",
       keywords:["#চালিকাশক্তি","#সিদ্ধান্তক্ষমতা","#চ্যালেঞ্জের_মানসিকতা","#আত্মবিশ্বাস","#কর্মতৎপরতা"],
       traits:["গন্তব্য ঠিক হলেই সাথে সাথে বেরিয়ে পড়ি","নতুন অভিজ্ঞতা উপভোগ করি","দ্বিধা না করে দ্রুত কাজে নামি","ভ্রমণের কেন্দ্রে থেকে পরিবেশকে প্রাণবন্ত করি"],
       friends:["দ্রুত সিদ্ধান্ত নেওয়া মানুষ","উদ্যমী মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","নির্ভরযোগ্যভাবে নেতৃত্ব দেওয়া মানুষ"],
       partner:{label:"সূচির খুঁটিনাটি যত্ন নেওয়া পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"কর্মতৎপরতা ও খুঁটিনাটি মনোযোগ মিলে ভ্রমণ আরও পরিপূর্ণ হয়"},
       trips:["🏜 দুবাই মরুভূমিতে ATV ট্যুর","🏔 সুইজারল্যান্ডে প্যারাগ্লাইডিং","🚗 আমেরিকার পশ্চিমাঞ্চলে রোড ট্রিপ","🎢 ইউনিভার্সাল স্টুডিওস"]},
-    DA:{code:"DA", emoji:"🦅", name:"ঈগল ধরনের ভ্রমণকারী", color:"var(--brand-purple)",
+    DA:{code:"DA", emoji:"🦅", name:"ঈগল ধরনের ভ্রমণকারী", title:"কৌশলী ভ্রমণকারী", color:"var(--brand-purple)",
       tagline:"পরিকল্পনা ও বাস্তবায়ন দুটোতেই দক্ষ কৌশলী ভ্রমণকারী",
       keywords:["#কৌশলগত_চিন্তা","#সুপরিকল্পিত","#সমস্যা_সমাধান","#কার্যকারিতা","#লক্ষ্যমুখী"],
       traits:["বড় ছবিটা আগে বিবেচনা করি","কার্যকর ভ্রমণপথকে গুরুত্ব দিই","পরিস্থিতি যেমনই হোক, শান্তভাবে সমাধান করি","পরিকল্পনা ও বাস্তবায়নের মধ্যে ভারসাম্য খুঁজি"],
       friends:["নিশ্চিন্তে দায়িত্ব দেওয়া যায় এমন মানুষ","বুদ্ধিদীপ্তভাবে ভ্রমণ করা মানুষ","সুপরিকল্পনা করতে পারা মানুষ","ভ্রমণ দলের নিবেদিত সংগঠক"],
       partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"কৌশলী ভ্রমণকারীর পরিকল্পনাকে সম্মান করে কোমলভাবে ঘাটতি পূরণ করে দেয়"},
       trips:["🏛 রোমের ইতিহাস অন্বেষণ","🚄 ট্রেনে সুইজারল্যান্ড ঘুরে দেখা","🌉 সিঙ্গাপুর সিটি ট্যুর","🏯 কিয়োটোর সাংস্কৃতিক ঐতিহ্য ভ্রমণ"]},
-    DI:{code:"DI", emoji:"🐎", name:"ঘোড়া ধরনের ভ্রমণকারী", color:"var(--brand-yellow)",
+    DI:{code:"DI", emoji:"🐎", name:"ঘোড়া ধরনের ভ্রমণকারী", title:"যোগাযোগপ্রিয় ভ্রমণকারী", color:"var(--brand-yellow)",
       tagline:"মানুষ ও অভিজ্ঞতা একসাথে উপভোগ করা প্রাণশক্তিতে ভরপুর ভ্রমণকারী",
       keywords:["#মিশুকতা","#নেতৃত্ব","#প্রভাব_বিস্তার","#সক্রিয়তা","#চ্যালেঞ্জের_মানসিকতা"],
       traits:["একসাথে কাটানো মুহূর্তকে গুরুত্ব দিই","নতুন কাজে আগ্রহ নিয়ে অংশ নিই","স্বাভাবিকভাবেই পরিবেশ জমিয়ে তুলি","মানুষের সাথে দ্রুত বন্ধুত্ব গড়ে তুলি"],
       friends:["সাথে থাকলে মজা লাগে এমন মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","পরিবেশ জমিয়ে তোলা মানুষ","মানুষকে ভালোভাবে নেতৃত্ব দেওয়া মানুষ"],
       partner:{label:"ভ্রমণকে আরও পরিপূর্ণ করা পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"আনন্দ খোঁজার ভ্রমণে পরিকল্পনা যোগ করে পরিপূর্ণতা বাড়িয়ে দেয়"},
       trips:["🎭 ব্রাজিলের রিও কার্নিভাল","🎶 বিদেশে মিউজিক ফেস্টিভ্যাল","🎡 জার্মানির অক্টোবরফেস্ট","🎉 স্থানীয় উৎসব অভিজ্ঞতা ভ্রমণ"]},
-    A:{code:"A", emoji:"🦉", name:"পেঁচা ধরনের ভ্রমণকারী", color:"var(--brand-dark-blue)",
+    A:{code:"A", emoji:"🦉", name:"পেঁচা ধরনের ভ্রমণকারী", title:"পরিকল্পনাপ্রিয় ভ্রমণকারী", color:"var(--brand-dark-blue)",
       tagline:"খুঁটিনাটিসহ যত্ন করে প্রস্তুতি নেওয়া পরিকল্পনাপ্রিয় ভ্রমণকারী",
       keywords:["#বিশ্লেষণ_ক্ষমতা","#সুপরিকল্পিত","#খুঁটিনাটিতে_মনোযোগ","#সুশৃঙ্খলতা","#স্থিতিশীলতা"],
       traits:["যথেষ্ট তথ্য খুঁজে দেখি","পরিকল্পনা করার প্রক্রিয়াটা উপভোগ করি","অনুমানযোগ্য ভ্রমণ পছন্দ করি","প্রস্তুতি থাকলে তবেই মন শান্ত থাকে"],
       friends:["পরিকল্পিত মানুষ","ভালো প্রস্তুতি নেওয়া মানুষ","বিশ্বস্ত মানুষ","খুঁটিনাটিতে মনোযোগী মানুষ"],
       partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"খুঁটিনাটিপ্রিয় ও সতর্ক আমার জন্য মানসিক স্বস্তি যোগ করে দেয়"},
       trips:["🏛 ল্যুভর জাদুঘর ট্যুর","🍷 ফ্রান্সের ওয়াইনারি ভ্রমণ","🏯 জাপানের ইতিহাস ও সংস্কৃতি ভ্রমণ","🍽 মিশেলিন স্বীকৃত রেস্তোরাঁ ভ্রমণ"]},
-    AI:{code:"AI", emoji:"🐘", name:"হাতি ধরনের ভ্রমণকারী", color:"var(--brand-blue)",
+    AI:{code:"AI", emoji:"🐘", name:"হাতি ধরনের ভ্রমণকারী", title:"যত্নশীল ভ্রমণকারী", color:"var(--brand-blue)",
       tagline:"যত্ন ও পরিকল্পনা দুটোতেই পারদর্শী নির্ভরযোগ্য যত্নশীল ভ্রমণকারী",
       keywords:["#যত্নশীলতা","#দায়িত্ববোধ","#বিশ্বস্ততা","#সহমর্মিতা","#সুপরিকল্পিত"],
       traits:["সবাই যেন সন্তুষ্ট থাকে, এমন ভ্রমণ চাই","মানুষ ও সূচি দুটোরই খুঁটিনাটি যত্ন নিই","নিশ্চিন্ত ও স্থিতিশীল ভ্রমণ পছন্দ করি","সঙ্গীদের কথা আগে ভাবি"],
       friends:["ভরসা ও নির্ভর করা যায় এমন মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","অত্যন্ত যত্নশীল মানুষ","দায়িত্বশীল মানুষ"],
       partner:{label:"ভ্রমণে আনন্দ যোগ করা যোগাযোগপ্রিয় ভ্রমণকারী", reason:"স্থিতিশীল ভ্রমণে আনন্দ যোগ করে সন্তুষ্টিকে সর্বোচ্চ পর্যায়ে তুলে দেয়"},
       trips:["🚂 সুইজারল্যান্ডের প্যানোরামা ট্রেন","🌲 কানাডার জাতীয় উদ্যান ভ্রমণ","🏡 উত্তর ইউরোপে হিলিং ভ্রমণ","🌌 ফিনল্যান্ডে অরোরা ভ্রমণ"]},
-    I:{code:"I", emoji:"🐬", name:"ডলফিন ধরনের ভ্রমণকারী", color:"var(--brand-teal)",
+    I:{code:"I", emoji:"🐬", name:"ডলফিন ধরনের ভ্রমণকারী", title:"সহমর্মী ভ্রমণকারী", color:"var(--brand-teal)",
       tagline:"একসাথে কাটানো মুহূর্তকে মূল্য দেওয়া সহমর্মী ভ্রমণকারী",
       keywords:["#সম্পর্ককেন্দ্রিক","#সহমর্মিতা","#যত্নশীলতা","#মুড_মেকার","#যোগাযোগ"],
       traits:["কার সাথে যাচ্ছি সেটাই গুরুত্বপূর্ণ","পরিবেশ ও আবহ উপভোগ করতে ভালোবাসি","স্মৃতিগুলো অনেকদিন মনে রাখি","মানুষের সাথে থাকলে আরও বেশি আনন্দ পাই"],
       friends:["মন দিয়ে কথা শোনা মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","উষ্ণ হৃদয়ের মানুষ","যার সাথে ভ্রমণ করা আনন্দের"],
       partner:{label:"নতুন অভিজ্ঞতা তৈরি ও সংযোগ ঘটানো চ্যালেঞ্জপ্রিয় ভ্রমণকারী", reason:"নতুন অভিজ্ঞতা যোগ করে আরও সমৃদ্ধ স্মৃতি তৈরি করা যায়"},
       trips:["🌇 সূর্যাস্ত ক্রুজ","🏮 তাইওয়ানের নাইট মার্কেট ভ্রমণ","🎪 স্থানীয় উৎসব অভিজ্ঞতা","🌸 আবেগঘন অলিগলি ভ্রমণ"]},
-    C:{code:"C", emoji:"🐉", name:"ড্রাগন ধরনের ভ্রমণকারী", color:"var(--brand-green)",
+    C:{code:"C", emoji:"🐉", name:"ড্রাগন ধরনের ভ্রমণকারী", title:"অলরাউন্ডার ভ্রমণকারী", color:"var(--brand-green)",
       tagline:"যেখানেই যান, নিজেই মূল চরিত্র — তারকার মতো এক ভ্রমণকারী",
       keywords:["#অভিযোজন_ক্ষমতা","#ভারসাম্য","#নমনীয়তা","#পরিস্থিতি_বুঝে_চলা","#বহুমুখী_প্রতিভা"],
       traits:["পরিস্থিতি অনুযায়ী নমনীয়ভাবে চলি","পরিকল্পনা ও তাৎক্ষণিকতার মধ্যে ভারসাম্য খুঁজি","সবার সাথেই সহজে মিশে যাই","নতুন পরিবেশেও দ্রুত মানিয়ে নিই"],
@@ -801,7 +812,7 @@
       '<div class="resulthead">' +
         '<div class="stamp">'+t.emoji+'</div>' +
         '<span class="code">'+STRX.typeBadge+' · '+t.code+'</span>' +
-        '<h2>'+esc(t.name)+'</h2>' +
+        '<h2>'+esc(t.title)+'</h2>' +
         '<p class="tagline">'+esc(t.tagline)+'</p>' +
       '</div>' +
       '<div class="stub"></div>' +
@@ -833,7 +844,7 @@
       '<div class="resulthead">' +
         '<div class="stamp">'+t.emoji+'</div>' +
         '<span class="code">'+STRX.typeBadge+' · '+t.code+'</span>' +
-        '<h2>'+esc(t.name)+'</h2>' +
+        '<h2>'+esc(t.title)+'</h2>' +
         '<p class="tagline">'+esc(t.tagline)+'</p>' +
       '</div>' +
       '<div class="stub"></div>' +
@@ -889,7 +900,7 @@
   function shareResult(record){
     var t = TYPES[record.type];
     var url = buildShareUrl(record.type, state.lang);
-    var text = STRX.shareTextTemplate.replace("{name}", t.name);
+    var text = STRX.shareTextTemplate.replace("{name}", t.title);
     if(navigator.share){
       navigator.share({title: document.title, text: text, url: url}).catch(function(){ /* user cancelled -- no-op */ });
     } else {
