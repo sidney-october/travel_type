@@ -9,7 +9,7 @@
      og:image는 같은 저장소 루트에 있는 og_thumbnail.jpg를 가리키며, 반드시 index.html과
      같은 폴더(루트)에 두어야 해요. -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="여행 취향 테스트! 나는 어떤 동물일까?">
+<meta property="og:title" content="여행 취향 테스트! 나는 어떤 사람일까?">
 <meta property="og:description" content="열심히 일한 나에게 찾아온 특별한 선물! 여행 취향으로 알아보는 나의 진짜 모습은?">
 <meta property="og:image" content="https://www.travel-style.co.kr/og_thumbnail.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,9 +268,27 @@
   <iframe name="hiddenSubmitFrame" id="hiddenSubmitFrame" style="display:none;" title="submit" aria-hidden="true"></iframe>
   <div id="shareSheetRoot"></div>
 
+<!-- Kakao JavaScript SDK -- only used for the "카카오톡" share button inside the
+     custom fallback sheet (openShareSheet), so KakaoTalk sharing works even from
+     inside browsers/webviews that don't support navigator.share (e.g. KakaoTalk's
+     own in-app browser). If this fails to load (ad-blocker, offline, etc.) the
+     Kakao button quietly falls back to copy-link, same as before. -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.8.5/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 (function(){
   "use strict";
+
+  /* ============ Kakao JavaScript SDK init ============ */
+  // Fill in your own Kakao Developers "JavaScript 키" below (developers.kakao.com ->
+  // 내 애플리케이션 -> 앱 설정 -> 앱 키), and register this site's domain under both
+  // "플랫폼 > Web" and "제품 설정 > 카카오 로그인/카카오톡 공유 > 웹 도메인" in that
+  // same app, or Kakao.Share.sendDefault() below will fail with a domain/key error.
+  var KAKAO_JS_KEY = "b62ceafb726bd03527c613f30fefeae2";
+  try{
+    if(typeof Kakao !== "undefined" && KAKAO_JS_KEY && KAKAO_JS_KEY.indexOf("YOUR_KAKAO") !== 0){
+      Kakao.init(KAKAO_JS_KEY);
+    }
+  }catch(e){ /* SDK missing/blocked -- shareKakao() below falls back to copy-link */ }
 
   /* ============ Google Form submission target ============ */
   // Responses are collected centrally in a linked Google Sheet via this
@@ -341,7 +359,7 @@
       {t:"“예약 내역부터 확인해서 어디서 문제가 생겼는지 보자.”", p:{D:0,A:7,I:0}},
       {t:"“괜찮아. 일단 진정하고 같이 생각해보자.”", p:{D:1,A:0,I:6}}
     ]},
-    {q:"평소의 나라면 가장 일어나지 않을 것 같은 상황은?", scored:true, options:[
+    {q:"여행 중 평소의 나라면 가장 일어나지 않을 것 같은 상황은?", scored:true, options:[
       {t:"내 의견만 고집해 일행이 눈치를 보는 상황", p:{D:0,A:0,I:7}},
       {t:"계획 없이 움직이다 일정이 계속 꼬이는 상황", p:{D:0,A:7,I:0}},
       {t:"결정을 미루다 아무것도 제대로 추진하지 못하는 상황", p:{D:7,A:0,I:0}}
@@ -353,7 +371,7 @@
     ]},
     {q:"가장 기대했던 관광지가 문을 닫았다.", scored:true, options:[
       {t:"내가 가고싶은 관광지를 찾아서 제안한다", p:{D:5,A:1,I:1}},
-      {t:"그전에 알아본 정보를 기반으로 일정을 고민한다", p:{D:1,A:5,I:1}},
+      {t:"그전에 알아본 정보를 기반으로 일정을 고민한다", p:{D:2,A:4,I:1}},
       {t:"다들 아쉽겠다, 가고싶은 다른 곳 없어? 친구에게 물어본다", p:{D:1,A:0,I:6}}
     ]},
     {q:"한 명과만 여행할 수 있다면 누구와 가고 싶은가?", scored:false, options:[
@@ -420,7 +438,7 @@
     ]},
     {q:"যে দর্শনীয় স্থানটির জন্য সবচেয়ে বেশি অপেক্ষা করছিলাম, সেখানে গিয়ে দেখি সেটি বন্ধ। আমি কী করি?", scored:true, options:[
       {t:"আমি যেতে চাই এমন অন্য একটি জায়গা বেছে নিয়ে সবার কাছে প্রস্তাব করি।", p:{D:5,A:1,I:1}},
-      {t:"আগে থেকে জেনে রাখা তথ্যের ভিত্তিতে পরের পরিকল্পনা ঠিক করি।", p:{D:1,A:5,I:1}},
+      {t:"আগে থেকে জেনে রাখা তথ্যের ভিত্তিতে পরের পরিকল্পনা ঠিক করি।", p:{D:2,A:4,I:1}},
       {t:"“সবাই কোথায় যেতে চাও?” ভ্রমণসঙ্গীদের মতামত শুনে তাদের পছন্দের সঙ্গে মিলিয়ে নিই।", p:{D:1,A:0,I:6}}
     ]},
     {q:"যদি শুধু একজনের সঙ্গে ভ্রমণে যেতে পারি, কাকে বেছে নেব?", scored:false, options:[
@@ -430,7 +448,11 @@
     ]}
   ];
   var KEY_Q_INDEX = [0,1,4,9]; // Q1, Q2, Q5, Q10 (0-based) — tie-break questions
-  var TOTAL_POINTS = 77; // fixed sum of each trait's points across the whole test
+  // Each trait's own max point pool across the 12 questions (sums to a DIFFERENT total
+  // per trait -- NOT a shared constant). Sourced directly from "진단지 수정 최종" G7/H7/I7
+  // (v2.2 spec): D=78, A=76, I=77. Percentages for ranking/gap thresholds and the score
+  // bars are each computed against their own trait's pool, per the spec's "점%" column.
+  var TOTAL_D = 78, TOTAL_A = 76, TOTAL_I = 77;
 
   var TYPES_KO = {
     D:{code:"D", emoji:"🐆", name:"치타형 여행자", title:"도전형 여행자", color:"var(--brand-berry)",
@@ -439,32 +461,32 @@
       traits:["여행지가 정해지면 바로 움직여요","새로운 경험을 즐겨요","망설이기보다 실행이 빨라요","여행의 중심에서 분위기를 이끌어요"],
       friends:["결정이 빠른 사람","추진력이 있는 사람","에너지가 넘치는 사람","든든하게 이끄는 사람"],
       partner:{label:"일정을 세심하게 챙겨주는 계획형 여행자", reason:"실행력과 꼼꼼함이 만나 여행의 완성도가 높아져요"},
-      trips:["🏜 두바이 사막 ATV 투어","🏔 스위스 패러글라이딩","🚗 미국 서부 로드트립","🎢 유니버설 스튜디오"]},
+      trips:["🏜 두바이 사막 ATV 투어","🏔 스위스 패러글라이딩","🚗 미국 서부 로드트립","🎢 일본 오사카 유니버설 스튜디오"]},
     DA:{code:"DA", emoji:"🦅", name:"독수리형 여행자", title:"전략형 여행자", color:"var(--brand-purple)",
-      tagline:"계획과 실행을 모두 갖춘 전략형 여행자",
+      tagline:"계획과 실행을 모두 갖춘 전략형 여행가",
       keywords:["#전략적사고","#계획성","#문제해결","#효율성","#목표지향"],
-      traits:["큰 그림부터 생각해요","효율적인 동선을 중요하게 생각해요","상황이 생겨도 침착하게 해결해요","계획과 실행의 균형을 추구해요"],
-      friends:["믿고 맡길 수 있는 사람","똑똑하게 여행하는 사람","계획을 잘 세우는 사람","여행 총무 같은 사람"],
+      traits:["효율적인 동선을 중요하게 생각해요","예측못한 상황이 생겨도 침착하게 해결해요","여행도 중요하지만 시간 낭비는 아깝다고 생각해요","즐거움과 효율 두가지를 모두 놓치고 싶지 않아요"],
+      friends:["믿고 맡길수 있는 사람","여행 단톡방의 실질적 운영자","위기상황 해결사","믿고 따라갈 수 있는 든든한 여행 메이트"],
       partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"전략형의 계획을 존중하면서 부드럽게 보완해줘요"},
-      trips:["🏛 로마 역사 탐방","🚄 스위스 기차 일주 여행","🌉 싱가포르 시티투어","🏯 교토 문화유산 여행"]},
+      trips:["🏛 로마 역사 탐방","🚄 스위스 기차 일주 여행","🌉 싱가포르 시티투어","🏯 미션형 여행 : 유네스코 문화유산 투어"]},
     DI:{code:"DI", emoji:"🐎", name:"말형 여행자", title:"소통형 여행자", color:"var(--brand-yellow)",
-      tagline:"사람과 경험을 함께 즐기는 에너지형 여행자",
+      tagline:"낯선 곳보다 새로운 인연에 설레는 여행자",
       keywords:["#친화력","#리더십","#영향력","#활동성","#도전정신"],
-      traits:["함께하는 순간을 중요하게 생각해요","새로운 활동에 적극적으로 참여해요","분위기를 자연스럽게 이끌어요","사람들과 금방 친해져요"],
-      friends:["같이 있으면 재미있는 사람","에너지가 좋은 사람","분위기를 띄우는 사람","사람을 잘 이끄는 사람"],
+      traits:["사람을 만나면 여행의 즐거움이 커져요","함께 하는 순간을 중요하게 생각해요","낯선 곳에서도 친구를 만들 수 있어요","여행지 분위기를 바꾸는 긍정 에너지 메이커"],
+      friends:["같이 있으면 재미있는 사람","사람들을 자연스럽게 연결하는 사람","함께 있으면 즐거운 사람","추억을 만드는 데 진심인 사람"],
       partner:{label:"여행의 완성도를 높이는 계획형 여행자", reason:"재미추구 여행에 계획을 추가해서 완성도를 높여줘요"},
       trips:["🎭 브라질 리우 카니발","🎶 해외 뮤직 페스티벌","🎡 독일 옥토버페스트","🎉 현지 축제 체험 여행"]},
     A:{code:"A", emoji:"🦉", name:"올빼미형 여행자", title:"계획형 여행자", color:"var(--brand-dark-blue)",
       tagline:"꼼꼼하게 준비하는 계획형 여행자",
       keywords:["#분석력","#계획성","#꼼꼼함","#체계성","#안정성"],
-      traits:["정보를 충분히 찾아봐요","계획을 세우는 과정이 즐거워요","예상 가능한 여행을 선호해요","준비가 되어 있어야 마음이 편해요"],
+      traits:["정보를 충분히 찾아봐요","계획을 세우는 과정이 즐거워요","예상가능한 여행을 선호해요","준비가 되어 있어야 마음이 편해요"],
       friends:["계획적인 사람","준비성이 좋은 사람","믿음직한 사람","꼼꼼한 사람"],
       partner:{label:"정서적인 편안함을 주는 공감형 여행자", reason:"꼼꼼하고 신중한 나에게 정서적인 편안함을 더해줘요"},
       trips:["🏛 루브르 박물관 투어","🍷 프랑스 와이너리 여행","🏯 일본 역사·문화 여행","🍽 미슐랭 맛집 탐방"]},
     AI:{code:"AI", emoji:"🐘", name:"코끼리형 여행자", title:"배려형 여행자", color:"var(--brand-blue)",
-      tagline:"배려와 계획을 모두 갖춘 신뢰형 여행자",
+      tagline:"사람도 챙기고 계획도 챙기는 든든한 배려형 여행자",
       keywords:["#배려심","#책임감","#신뢰","#공감","#계획성"],
-      traits:["모두가 만족하는 여행을 원해요","사람도 일정도 꼼꼼히 챙겨요","안정감 있는 여행을 선호해요","함께하는 사람을 먼저 생각해요"],
+      traits:["모두가 만족할 수 있는 일정을 고민해요","사람도 일정도 꼼꼼히 챙겨요","안정감 있는 여행을 선호해요","함께하는 사람을 먼저 생각해요"],
       friends:["믿고 의지할 수 있는 사람","함께 있으면 편한 사람","배려심이 많은 사람","책임감 있는 사람"],
       partner:{label:"여행의 즐거움을 만드는 소통형 여행자", reason:"안정적인 여행에 재미를 더해 만족도를 최상으로 높여줘요"},
       trips:["🚂 스위스 파노라마 열차","🌲 캐나다 국립공원 여행","🏡 북유럽 힐링 여행","🌌 핀란드 오로라 여행"]},
@@ -472,16 +494,16 @@
       tagline:"함께하는 순간을 소중히 여기는 공감형 여행자",
       keywords:["#관계중심","#공감능력","#배려심","#분위기메이커","#소통"],
       traits:["누구와 가는지가 중요해요","분위기를 즐기는 편이에요","추억을 오래 기억해요","사람들과 함께할 때 더 즐거워요"],
-      friends:["이야기를 잘 들어주는 사람","함께 있으면 편한 사람","따뜻한 사람","여행 가기 좋은 사람"],
+      friends:["이야기를 잘들어주는 사람","함께 있으면 편한 사람","따뜻한 사람","친절하고 대화가 잘 통하는 사람"],
       partner:{label:"새로운 경험을 만들고 연결하는 도전형 여행자", reason:"새로운 경험을 추가해서 더욱 풍성한 추억을 만들수 있어요"},
-      trips:["🌇 노을 크루즈","🏮 대만 야시장 투어","🎪 현지 축제 체험","🌸 감성 골목 여행"]},
+      trips:["🌇 나눔 봉사 여행","🏮 문화 체험여행","🎪 힐링, 웰니스 여행","🌸 감성 로컬 여행"]},
     C:{code:"C", emoji:"🐉", name:"용형 여행자", title:"올라운더 여행자", color:"var(--brand-green)",
-      tagline:"어디서든 내가 주인공인 연예인 같은 여행자",
+      tagline:"누구와 떠나도 편안하고, 어디서든 빛나는 여행자",
       keywords:["#적응력","#균형감각","#유연성","#융통성","#다재다능"],
-      traits:["상황에 맞게 유연하게 움직여요","계획과 즉흥을 모두 즐겨요","누구와도 잘 어울려요","새로운 환경에도 금방 적응해요"],
-      friends:["어디서든 잘 적응하는 사람","함께 있으면 편한 사람","균형감 있는 사람","다재다능한 사람"],
+      traits:["상황에 맞게 유연하게 움직여요","계획과 즉흥사이에서 균형을 찾아요","누구와도 잘 어울려요","새로운 환경에도 금방 적응해요"],
+      friends:["어디서든 잘 적응하는 사람","함께 있으면 재미있는 사람","다재다능한 사람","균형감 있는 사람"],
       partner:{label:"꼼꼼한 계획형 여행자", reason:"꼼꼼한 계획으로 여행의 완성도를 높여줘요"},
-      trips:["🎒 동남아 배낭여행","🚐 뉴질랜드 캠핑카 일주","🌍 세계일주 여행","🏖 발리 자유여행"]}
+      trips:["🎒 유럽 소도시 여행","🚐 뉴질랜드 캠핑카 일주","🌍 이탈리아 쿠킹 클래스","🏖 미국 서부 로드트립"]}
   };
   // Bengali ("벵골어") translation of TYPES_KO, sourced from "고객결과지_뱅골어 ver."
   // where the Korean site text matches the spec sheet, and translated fresh where the
@@ -494,19 +516,19 @@
       traits:["গন্তব্য ঠিক হলেই সাথে সাথে বেরিয়ে পড়ি","নতুন অভিজ্ঞতা উপভোগ করি","দ্বিধা না করে দ্রুত কাজে নামি","ভ্রমণের কেন্দ্রে থেকে পরিবেশকে প্রাণবন্ত করি"],
       friends:["দ্রুত সিদ্ধান্ত নেওয়া মানুষ","উদ্যমী মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","নির্ভরযোগ্যভাবে নেতৃত্ব দেওয়া মানুষ"],
       partner:{label:"সূচির খুঁটিনাটি যত্ন নেওয়া পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"কর্মতৎপরতা ও খুঁটিনাটি মনোযোগ মিলে ভ্রমণ আরও পরিপূর্ণ হয়"},
-      trips:["🏜 দুবাই মরুভূমিতে ATV ট্যুর","🏔 সুইজারল্যান্ডে প্যারাগ্লাইডিং","🚗 আমেরিকার পশ্চিমাঞ্চলে রোড ট্রিপ","🎢 ইউনিভার্সাল স্টুডিওস"]},
+      trips:["🏜 দুবাই মরুভূমিতে ATV ট্যুর","🏔 সুইজারল্যান্ডে প্যারাগ্লাইডিং","🚗 আমেরিকার পশ্চিমাঞ্চলে রোড ট্রিপ","🎢 জাপানের ওসাকা ইউনিভার্সাল স্টুডিওস"]},
     DA:{code:"DA", emoji:"🦅", name:"ঈগল ধরনের ভ্রমণকারী", title:"কৌশলী ভ্রমণকারী", color:"var(--brand-purple)",
       tagline:"পরিকল্পনা ও বাস্তবায়ন দুটোতেই দক্ষ কৌশলী ভ্রমণকারী",
       keywords:["#কৌশলগত_চিন্তা","#সুপরিকল্পিত","#সমস্যা_সমাধান","#কার্যকারিতা","#লক্ষ্যমুখী"],
-      traits:["বড় ছবিটা আগে বিবেচনা করি","কার্যকর ভ্রমণপথকে গুরুত্ব দিই","পরিস্থিতি যেমনই হোক, শান্তভাবে সমাধান করি","পরিকল্পনা ও বাস্তবায়নের মধ্যে ভারসাম্য খুঁজি"],
-      friends:["নিশ্চিন্তে দায়িত্ব দেওয়া যায় এমন মানুষ","বুদ্ধিদীপ্তভাবে ভ্রমণ করা মানুষ","সুপরিকল্পনা করতে পারা মানুষ","ভ্রমণ দলের নিবেদিত সংগঠক"],
+      traits:["কার্যকর ভ্রমণপথকে গুরুত্ব দিই","অপ্রত্যাশিত পরিস্থিতিতেও শান্তভাবে সমাধান করি","ভ্রমণ গুরুত্বপূর্ণ, তবে সময় নষ্ট করাটা অপচয় মনে করি","আনন্দ ও কার্যকারিতা — কোনোটাই হাতছাড়া করতে চাই না"],
+      friends:["নিশ্চিন্তে দায়িত্ব দেওয়া যায় এমন মানুষ","ভ্রমণ গ্রুপ চ্যাটের আসল পরিচালক","সংকট মুহূর্তের সমাধানকারী","নিশ্চিন্তে অনুসরণ করা যায় এমন নির্ভরযোগ্য ভ্রমণসঙ্গী"],
       partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"কৌশলী ভ্রমণকারীর পরিকল্পনাকে সম্মান করে কোমলভাবে ঘাটতি পূরণ করে দেয়"},
-      trips:["🏛 রোমের ইতিহাস অন্বেষণ","🚄 ট্রেনে সুইজারল্যান্ড ঘুরে দেখা","🌉 সিঙ্গাপুর সিটি ট্যুর","🏯 কিয়োটোর সাংস্কৃতিক ঐতিহ্য ভ্রমণ"]},
+      trips:["🏛 রোমের ইতিহাস অন্বেষণ","🚄 ট্রেনে সুইজারল্যান্ড ঘুরে দেখা","🌉 সিঙ্গাপুর সিটি ট্যুর","🏯 মিশনভিত্তিক ভ্রমণ: ইউনেস্কো বিশ্ব ঐতিহ্য ট্যুর"]},
     DI:{code:"DI", emoji:"🐎", name:"ঘোড়া ধরনের ভ্রমণকারী", title:"যোগাযোগপ্রিয় ভ্রমণকারী", color:"var(--brand-yellow)",
-      tagline:"মানুষ ও অভিজ্ঞতা একসাথে উপভোগ করা প্রাণশক্তিতে ভরপুর ভ্রমণকারী",
+      tagline:"অচেনা জায়গার চেয়ে নতুন মানুষের সাথে পরিচয়ে বেশি রোমাঞ্চিত ভ্রমণকারী",
       keywords:["#মিশুকতা","#নেতৃত্ব","#প্রভাব_বিস্তার","#সক্রিয়তা","#চ্যালেঞ্জের_মানসিকতা"],
-      traits:["একসাথে কাটানো মুহূর্তকে গুরুত্ব দিই","নতুন কাজে আগ্রহ নিয়ে অংশ নিই","স্বাভাবিকভাবেই পরিবেশ জমিয়ে তুলি","মানুষের সাথে দ্রুত বন্ধুত্ব গড়ে তুলি"],
-      friends:["সাথে থাকলে মজা লাগে এমন মানুষ","প্রাণশক্তিতে ভরপুর মানুষ","পরিবেশ জমিয়ে তোলা মানুষ","মানুষকে ভালোভাবে নেতৃত্ব দেওয়া মানুষ"],
+      traits:["মানুষের সাথে দেখা হলে ভ্রমণের আনন্দ বেড়ে যায়","একসাথে কাটানো মুহূর্তকে গুরুত্ব দিই","অচেনা জায়গাতেও বন্ধু বানাতে পারি","ভ্রমণস্থানের পরিবেশ বদলে দেওয়া ইতিবাচক শক্তির জোগানদাতা"],
+      friends:["সাথে থাকলে মজা লাগে এমন মানুষ","মানুষদের স্বাভাবিকভাবে যুক্ত করে দেওয়া মানুষ","সাথে থাকলে আনন্দ লাগে এমন মানুষ","স্মৃতি তৈরিতে আন্তরিক মানুষ"],
       partner:{label:"ভ্রমণকে আরও পরিপূর্ণ করা পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"আনন্দ খোঁজার ভ্রমণে পরিকল্পনা যোগ করে পরিপূর্ণতা বাড়িয়ে দেয়"},
       trips:["🎭 ব্রাজিলের রিও কার্নিভাল","🎶 বিদেশে মিউজিক ফেস্টিভ্যাল","🎡 জার্মানির অক্টোবরফেস্ট","🎉 স্থানীয় উৎসব অভিজ্ঞতা ভ্রমণ"]},
     A:{code:"A", emoji:"🦉", name:"পেঁচা ধরনের ভ্রমণকারী", title:"পরিকল্পনাপ্রিয় ভ্রমণকারী", color:"var(--brand-dark-blue)",
@@ -517,9 +539,9 @@
       partner:{label:"মানসিক স্বস্তি দেওয়া সহমর্মী ভ্রমণকারী", reason:"খুঁটিনাটিপ্রিয় ও সতর্ক আমার জন্য মানসিক স্বস্তি যোগ করে দেয়"},
       trips:["🏛 ল্যুভর জাদুঘর ট্যুর","🍷 ফ্রান্সের ওয়াইনারি ভ্রমণ","🏯 জাপানের ইতিহাস ও সংস্কৃতি ভ্রমণ","🍽 মিশেলিন স্বীকৃত রেস্তোরাঁ ভ্রমণ"]},
     AI:{code:"AI", emoji:"🐘", name:"হাতি ধরনের ভ্রমণকারী", title:"যত্নশীল ভ্রমণকারী", color:"var(--brand-blue)",
-      tagline:"যত্ন ও পরিকল্পনা দুটোতেই পারদর্শী নির্ভরযোগ্য যত্নশীল ভ্রমণকারী",
+      tagline:"মানুষের যত্নও নেয়, পরিকল্পনাও সামলায় — নির্ভরযোগ্য যত্নশীল ভ্রমণকারী",
       keywords:["#যত্নশীলতা","#দায়িত্ববোধ","#বিশ্বস্ততা","#সহমর্মিতা","#সুপরিকল্পিত"],
-      traits:["সবাই যেন সন্তুষ্ট থাকে, এমন ভ্রমণ চাই","মানুষ ও সূচি দুটোরই খুঁটিনাটি যত্ন নিই","নিশ্চিন্ত ও স্থিতিশীল ভ্রমণ পছন্দ করি","সঙ্গীদের কথা আগে ভাবি"],
+      traits:["সবাই খুশি হবে এমন সূচি নিয়ে ভাবি","মানুষ ও সূচি দুটোরই খুঁটিনাটি যত্ন নিই","নিশ্চিন্ত ও স্থিতিশীল ভ্রমণ পছন্দ করি","সঙ্গীদের কথা আগে ভাবি"],
       friends:["ভরসা ও নির্ভর করা যায় এমন মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","অত্যন্ত যত্নশীল মানুষ","দায়িত্বশীল মানুষ"],
       partner:{label:"ভ্রমণে আনন্দ যোগ করা যোগাযোগপ্রিয় ভ্রমণকারী", reason:"স্থিতিশীল ভ্রমণে আনন্দ যোগ করে সন্তুষ্টিকে সর্বোচ্চ পর্যায়ে তুলে দেয়"},
       trips:["🚂 সুইজারল্যান্ডের প্যানোরামা ট্রেন","🌲 কানাডার জাতীয় উদ্যান ভ্রমণ","🏡 উত্তর ইউরোপে হিলিং ভ্রমণ","🌌 ফিনল্যান্ডে অরোরা ভ্রমণ"]},
@@ -527,24 +549,24 @@
       tagline:"একসাথে কাটানো মুহূর্তকে মূল্য দেওয়া সহমর্মী ভ্রমণকারী",
       keywords:["#সম্পর্ককেন্দ্রিক","#সহমর্মিতা","#যত্নশীলতা","#মুড_মেকার","#যোগাযোগ"],
       traits:["কার সাথে যাচ্ছি সেটাই গুরুত্বপূর্ণ","পরিবেশ ও আবহ উপভোগ করতে ভালোবাসি","স্মৃতিগুলো অনেকদিন মনে রাখি","মানুষের সাথে থাকলে আরও বেশি আনন্দ পাই"],
-      friends:["মন দিয়ে কথা শোনা মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","উষ্ণ হৃদয়ের মানুষ","যার সাথে ভ্রমণ করা আনন্দের"],
+      friends:["মন দিয়ে কথা শোনা মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","উষ্ণ হৃদয়ের মানুষ","দয়ালু এবং সহজে কথা মেলে এমন মানুষ"],
       partner:{label:"নতুন অভিজ্ঞতা তৈরি ও সংযোগ ঘটানো চ্যালেঞ্জপ্রিয় ভ্রমণকারী", reason:"নতুন অভিজ্ঞতা যোগ করে আরও সমৃদ্ধ স্মৃতি তৈরি করা যায়"},
-      trips:["🌇 সূর্যাস্ত ক্রুজ","🏮 তাইওয়ানের নাইট মার্কেট ভ্রমণ","🎪 স্থানীয় উৎসব অভিজ্ঞতা","🌸 আবেগঘন অলিগলি ভ্রমণ"]},
+      trips:["🌇 দান ও সেবামূলক ভ্রমণ","🏮 সাংস্কৃতিক অভিজ্ঞতা ভ্রমণ","🎪 হিলিং ও ওয়েলনেস ভ্রমণ","🌸 অনুভূতিপূর্ণ স্থানীয় ভ্রমণ"]},
     C:{code:"C", emoji:"🐉", name:"ড্রাগন ধরনের ভ্রমণকারী", title:"অলরাউন্ডার ভ্রমণকারী", color:"var(--brand-green)",
-      tagline:"যেখানেই যান, নিজেই মূল চরিত্র — তারকার মতো এক ভ্রমণকারী",
+      tagline:"যার সাথেই যান স্বচ্ছন্দ, যেখানেই যান উজ্জ্বল — এমন এক ভ্রমণকারী",
       keywords:["#অভিযোজন_ক্ষমতা","#ভারসাম্য","#নমনীয়তা","#পরিস্থিতি_বুঝে_চলা","#বহুমুখী_প্রতিভা"],
       traits:["পরিস্থিতি অনুযায়ী নমনীয়ভাবে চলি","পরিকল্পনা ও তাৎক্ষণিকতার মধ্যে ভারসাম্য খুঁজি","সবার সাথেই সহজে মিশে যাই","নতুন পরিবেশেও দ্রুত মানিয়ে নিই"],
-      friends:["যেকোনো জায়গায় মানিয়ে নেওয়া মানুষ","সাথে থাকলে স্বস্তি লাগে এমন মানুষ","ভারসাম্যপূর্ণ মানুষ","বহুমুখী প্রতিভার মানুষ"],
+      friends:["যেকোনো জায়গায় মানিয়ে নেওয়া মানুষ","সাথে থাকলে মজা লাগে এমন মানুষ","বহুমুখী প্রতিভার মানুষ","ভারসাম্যপূর্ণ মানুষ"],
       partner:{label:"খুঁটিনাটিতে মনোযোগী পরিকল্পনাপ্রিয় ভ্রমণকারী", reason:"সুনিপুণ পরিকল্পনা দিয়ে ভ্রমণকে আরও পরিপূর্ণ করে"},
-      trips:["🎒 দক্ষিণ-পূর্ব এশিয়ায় ব্যাকপ্যাকিং","🚐 নিউজিল্যান্ডে ক্যাম্পারভ্যান ভ্রমণ","🌍 বিশ্ব ভ্রমণ","🏖 বালিতে স্বাধীন ভ্রমণ"]}
+      trips:["🎒 ইউরোপের ছোট শহর ভ্রমণ","🚐 ক্যাম্পারভ্যানে নিউজিল্যান্ড ঘুরে দেখা","🌍 ইতালিতে রান্নার ক্লাস","🏖 আমেরিকার পশ্চিমাঞ্চলে রোড ট্রিপ"]}
   };
   var ANIMAL_SUFFIX = {ko:"여행자", bn:"ভ্রমণকারী"}; // stripped from t.name to get the 동물유형 (animal-type) sheet value
 
   /* ============ UI chrome strings (everything on-screen besides QUESTIONS/TYPES) ============ */
   var STR_KO = {
     eyebrowIntro:"✈︎ TRIP PERSONALITY",
-    title:"여행 취향 테스트! <br>나는 어떤 동물일까?",
-    lede:"열심히 일한 나에게 찾아온 특별한 선물! <br>황금 같은 5일의 휴가가 생겼어요. <br>어디로 갈지, 누구와 갈지, 무엇을 할지 여행 취향으로 알아보는 나의 진짜 모습은?",
+    title:"여행 취향 테스트! <br>나는 어떤 사람일까?",
+    lede:"열심히 일한 나에게 찾아온 특별한 선물! 황금 같은 5일의 휴가가 생겼습니다. <br>어디로 갈지, 누구와 갈지, 무엇을 할지 하나씩 선택하다 보니 어느새 여행속에 <br>나의 성향이 고스란히 담겨 있습니다. 여행 취향으로 알아보는 나의 진짜 모습은?",
     startBtn:"✈︎ 시작하기",
     footnote:"본 사이트는 개인정보를 수집하지 않습니다",
     eyebrowQuiz:"TRAVEL ITINERARY",
@@ -570,8 +592,8 @@
   };
   var STR_BN = {
     eyebrowIntro:"✈︎ TRIP PERSONALITY",
-    title:"ভ্রমণ পছন্দের পরীক্ষা! <br>আমি কোন প্রাণী?",
-    lede:"কঠোর পরিশ্রমের পর নিজের জন্য এক বিশেষ উপহার! <br>সোনার মতো মূল্যবান ৫ দিনের ছুটি পেয়ে গেছেন। <br>কোথায় যাবেন, কার সাথে যাবেন, কী করবেন — ভ্রমণের পছন্দ দিয়েই জেনে নিন আপনার আসল রূপ কেমন?",
+    title:"ভ্রমণ পছন্দের পরীক্ষা! <br>আমি কেমন মানুষ?",
+    lede:"কঠোর পরিশ্রমের পর হঠাৎ পাঁচ দিনের একটি বিশেষ ছুটি পেলেন! <br>কোথায় যাবেন, কার সঙ্গে যাবেন, কী করবেন, এমন নানা সিদ্ধান্ত নিতে নিতে আপনার ভ্রমণের ধরনেই ফুটে উঠতে পারে আপনার স্বভাব। <br>ভ্রমণে আপনার পছন্দ ও আচরণের মাধ্যমে জেনে নিন, আপনি আসলে কেমন মানুষ!",
     startBtn:"✈︎ শুরু করুন",
     footnote:"এই ওয়েবসাইট কোনো ব্যক্তিগত তথ্য সংগ্রহ করে না",
     eyebrowQuiz:"TRAVEL ITINERARY",
@@ -635,21 +657,25 @@
       if(p.I>p[dom]) dom='I';
       keySum[dom]+=p[dom];
     });
+    // Ranking and gap thresholds are computed on each trait's OWN percentage
+    // (raw score / that trait's point pool), matching the spec's "점%" column --
+    // not on raw scores, since the three pools (78/76/77) now differ.
+    var pct={D:scores.D/TOTAL_D, A:scores.A/TOTAL_A, I:scores.I/TOTAL_I};
     var order=["D","A","I"];
-    var sorted=order.slice().sort(function(a,b){return scores[b]-scores[a];});
+    var sorted=order.slice().sort(function(a,b){return pct[b]-pct[a];});
     var top=sorted[0], third=sorted[2];
-    var gap12=scores[top]-scores[sorted[1]];
-    var gap13=scores[top]-scores[third];
+    var gap12=pct[top]-pct[sorted[1]];
+    var gap13=pct[top]-pct[third];
     var type;
-    if(gap12/TOTAL_POINTS >= 0.15){
+    if(gap12 >= 0.15){
       type=top;
-    } else if(gap13/TOTAL_POINTS <= 0.05){
+    } else if(gap13 <= 0.05){
       type="C";
-    } else if(scores.A > scores.D){
+    } else if(pct.A > pct.D){
       type="AI";
-    } else if(scores.A > scores.I){
+    } else if(pct.A > pct.I){
       type="DA";
-    } else if(scores.A < scores.I){
+    } else if(pct.A < pct.I){
       type="DI";
     } else {
       type = keySum.A > keySum.I ? "DA" : "DI";
@@ -803,8 +829,8 @@
   function renderResult(record){
     var t = TYPES[record.type];
     var s = record.scores;
-    function bar(label,val){
-      return '<div class="barrow"><span class="blabel">'+label+'</span><div class="btrack"><div class="bfill" style="width:'+Math.round((val/TOTAL_POINTS)*100)+'%; background:'+t.color+';"></div></div><span class="bval">'+val+'</span></div>';
+    function bar(label,val,total){
+      return '<div class="barrow"><span class="blabel">'+label+'</span><div class="btrack"><div class="bfill" style="width:'+Math.round((val/total)*100)+'%; background:'+t.color+';"></div></div><span class="bval">'+val+'</span></div>';
     }
     app.innerHTML =
       '<div style="--type-color:'+t.color+'; --type-tint: color-mix(in srgb, '+t.color+' 16%, var(--paper-soft));">' +
@@ -815,7 +841,7 @@
         '<p class="tagline">'+esc(t.tagline)+'</p>' +
       '</div>' +
       '<div class="stub"></div>' +
-      '<div class="section">' + bar(STRX.barD,s.D) + bar(STRX.barA,s.A) + bar(STRX.barI,s.I) + '</div>' +
+      '<div class="section">' + bar(STRX.barD,s.D,TOTAL_D) + bar(STRX.barA,s.A,TOTAL_A) + bar(STRX.barI,s.I,TOTAL_I) + '</div>' +
       '<div class="section"><h3>'+STRX.sectionKeywords+'</h3><div class="tags">'+t.keywords.map(function(k){return '<span class="tag">'+esc(k)+'</span>';}).join("")+'</div></div>' +
       '<div class="section trait-block trait-self"><h3><span class="ico">&#9992;&#65039;</span>'+STRX.sectionTraits+'</h3><ul class="list">'+t.traits.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
       '<div class="section trait-block trait-friends"><h3><span class="ico">&#128064;</span>'+STRX.sectionFriends+'</h3><ul class="list">'+t.friends.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div>' +
@@ -900,8 +926,26 @@
     var t = TYPES[record.type];
     var url = buildShareUrl(record.type, state.lang);
     var text = STRX.shareTextTemplate.replace("{name}", t.title);
-    if(navigator.share){
-      navigator.share({title: document.title, text: text, url: url}).catch(function(){ /* user cancelled -- no-op */ });
+    var payload = {title: document.title, text: text, url: url};
+    var canUseNative = false;
+    try{
+      // navigator.canShare, where present, also catches a browser that exposes
+      // navigator.share but rejects this particular payload shape.
+      canUseNative = !!navigator.share && (!navigator.canShare || navigator.canShare(payload));
+    }catch(e){ canUseNative = false; }
+    if(canUseNative){
+      try{
+        navigator.share(payload).catch(function(err){
+          // AbortError = the person opened the native sheet and backed out themselves;
+          // leave that alone. Any other rejection (a permissions-policy block, a
+          // webview that advertises the API but refuses the call, etc.) means the
+          // native sheet never actually appeared, so hand them the custom one instead
+          // of silently doing nothing.
+          if(!err || err.name !== "AbortError"){ openShareSheet(text, url); }
+        });
+      }catch(e){
+        openShareSheet(text, url);
+      }
     } else {
       openShareSheet(text, url);
     }
@@ -931,10 +975,34 @@
     document.getElementById("shareBackdrop").addEventListener("click", close);
     document.getElementById("shareCancel").addEventListener("click", close);
     document.getElementById("shareKakao").addEventListener("click", function(){
-      // No official SDK/app key for KakaoTalk or Messenger is wired into this
-      // page, so the honest best-effort fallback here is: copy the link and
-      // tell people to paste it into whichever app this button names.
-      copyToClipboard(text + " " + url, function(){ toast(STRX.shareCopied); });
+      // Korean: this button is "카카오톡" -- use the real Kakao JS SDK so tapping
+      // it opens KakaoTalk's own recipient picker directly (works inside KakaoTalk's
+      // in-app browser too, since it talks to the app via its own link scheme, not
+      // navigator.share). Bengali: this button is Facebook Messenger, which has no
+      // SDK wired in here, so it keeps the copy-link fallback either way.
+      var sentViaKakao = false;
+      if(state.lang === "ko"){
+        try{
+          if(typeof Kakao !== "undefined" && Kakao.isInitialized && Kakao.isInitialized()){
+            Kakao.Share.sendDefault({
+              objectType: "feed",
+              content: {
+                title: STRX.shareSheetTitle,
+                description: text,
+                imageUrl: location.origin + "/og_thumbnail.jpg",
+                link: { mobileWebUrl: url, webUrl: url }
+              },
+              buttons: [{ title: STRX.sharedCta, link: { mobileWebUrl: url, webUrl: url } }]
+            });
+            sentViaKakao = true;
+          }
+        }catch(e){ sentViaKakao = false; }
+      }
+      if(!sentViaKakao){
+        copyToClipboard(text + " " + url, function(){ toast(STRX.shareCopied); });
+      } else {
+        close();
+      }
     });
     document.getElementById("shareSms").addEventListener("click", function(){
       var isIOS = /iP(hone|od|ad)/.test(navigator.userAgent || "");
