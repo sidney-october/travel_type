@@ -41,6 +41,11 @@
     font-family:"Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
+    /* Korean (and CJK generally) can otherwise break a line between ANY two
+       characters, even mid-word (e.g. "관광지를" -> "관" / "광지를"), since
+       browsers treat that as normal CJK wrapping. keep-all restricts breaks
+       to actual word-spacing, same as Bengali/Latin text already does. */
+    word-break:keep-all;
   }
   h1,h2,h3,p{margin:0;}
   button{font-family:inherit;}
@@ -180,7 +185,7 @@
   .flightpath .plane{position:absolute; top:-2px; transform:translateX(-50%); font-size:18px; transition:left .35s ease; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));}
 
   /* ---------- question ---------- */
-  .qtext{font-size:19px; font-weight:700; line-height:1.5; margin-bottom:20px; text-wrap:balance;}
+  .qtext{font-size:19px; font-weight:700; line-height:1.5; margin-bottom:20px;}
   .options{display:flex; flex-direction:column; gap:10px;}
   .option{
     width:100%; text-align:left; padding:15px 16px; border-radius:14px;
@@ -683,22 +688,32 @@
     var pct={D:scores.D/TOTAL_D, A:scores.A/TOTAL_A, I:scores.I/TOTAL_I};
     var order=["D","A","I"];
     var sorted=order.slice().sort(function(a,b){return pct[b]-pct[a];});
-    var top=sorted[0], third=sorted[2];
-    var gap12=pct[top]-pct[sorted[1]];
+    var top=sorted[0], second=sorted[1], third=sorted[2];
+    var gap12=pct[top]-pct[second];
     var gap13=pct[top]-pct[third];
     var type;
     if(gap12 >= 0.15){
       type=top;
     } else if(gap13 <= 0.05){
       type="C";
-    } else if(pct.A > pct.D){
-      type="AI";
-    } else if(pct.A > pct.I){
-      type="DA";
-    } else if(pct.A < pct.I){
-      type="DI";
     } else {
-      type = keySum.A > keySum.I ? "DA" : "DI";
+      // "복합성향" (dual type): the LOWEST-percentage trait is excluded and
+      // the other two combine (D+A=DA, D+I=DI, A+I=AI). Per the spec's
+      // "판정로직 검증표" priority-4 rule: if the 2nd- and 3rd-place traits
+      // are exactly tied on percentage, the one with the LOWER Key-question
+      // sum is the one actually excluded (the other is kept/combined with
+      // the top trait). This replaces an earlier D-vs-A-then-A-vs-I cascade
+      // that mis-ranked combo types whenever A placed 1st with D 2nd and I
+      // 3rd (and a couple of 2nd/3rd-tie cases) -- confirmed against the
+      // spec's full verification table (20/20 cases, including its own
+      // real-user "사용자 캡처" example, which is exactly this A>D>I case).
+      var lowest = third;
+      if(pct[second] === pct[third] && keySum[third] > keySum[second]){
+        lowest = second;
+      }
+      if(lowest === "D"){ type = "AI"; }
+      else if(lowest === "A"){ type = "DI"; }
+      else { type = "DA"; }
     }
     return {scores:scores, type:type};
   }
